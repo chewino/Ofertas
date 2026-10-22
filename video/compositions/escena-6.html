@@ -52,23 +52,27 @@
 
   <script>
     (function () {
+      // Tiempos de la narración (tiempos.js): F[i] = frase i, en segundos locales de la escena
+      const F = window.GUION.escenas["escena-6"].frases;
       const tl = gsap.timeline({ paused: true });
 
-      // Tiempos locales: 0 s = 54 s del video completo
+      // "Y ahora dime: ¿cuánto te llegó de luz este último bimestre?"
       tl.fromTo("#e6-logo", { y: -120, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6, ease: "back.out(2)" }, 0);
-      tl.fromTo("#e6-question", { scale: 0.8, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.6, ease: "back.out(2)" }, 0.4);
+      tl.fromTo("#e6-question", { scale: 0.8, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.6, ease: "back.out(2)" }, F[1].start - 0.2);
       ["#e6-opt-a", "#e6-opt-b", "#e6-opt-c"].forEach((o, i) => {
-        tl.fromTo(o, { x: i % 2 ? 1100 : -1100 }, { x: 0, duration: 0.55, ease: "power3.out" }, 1.4 + i * 0.25);
+        tl.fromTo(o, { x: i % 2 ? 1100 : -1100 }, { x: 0, duration: 0.55, ease: "power3.out" }, F[1].start + 0.8 + i * 0.25);
       });
 
-      // Resaltar cada opción cuando el narrador la menciona
-      [["#e6-opt-a", 3.0], ["#e6-opt-b", 3.4], ["#e6-opt-c", 3.8]].forEach(([o, t]) => {
-        tl.fromTo(o, { scale: 1 }, { scale: 1.06, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }, t);
+      // Cada opción se resalta cuando el narrador la menciona
+      const d = F[2].end - F[2].start;
+      [["#e6-opt-a", 0.05], ["#e6-opt-b", 0.33], ["#e6-opt-c", 0.68]].forEach(([o, f]) => {
+        tl.fromTo(o, { scale: 1 }, { scale: 1.06, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }, F[2].start + f * d);
       });
 
-      tl.fromTo("#e6-bubble", { scale: 0, rotation: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.5, ease: "back.out(2.5)" }, 3.85);
-      tl.fromTo("#e6-bubble", { rotation: 0 }, { rotation: 2, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut", immediateRender: false }, 4.6);
-      tl.fromTo("#e6-mark", { scale: 1 }, { scale: 1.15, duration: 0.3, yoyo: true, repeat: 1 }, 4.2);
+      // "¡Te leemos en los comentarios!"
+      tl.fromTo("#e6-bubble", { scale: 0, rotation: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.5, ease: "back.out(2.5)" }, F[3].start - 0.1);
+      tl.fromTo("#e6-bubble", { rotation: 0 }, { rotation: 2, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut", immediateRender: false }, F[3].start + 0.5);
+      tl.fromTo("#e6-mark", { scale: 1 }, { scale: 1.15, duration: 0.3, yoyo: true, repeat: 1 }, F[3].start + 0.3);
 
       window.__timelines = window.__timelines || {};
       window.__timelines["escena-6"] = tl;

@@ -1,0 +1,123 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; color: #fff; font-family: "Montserrat", sans-serif; }
+    #root, #root * { box-sizing: border-box; }
+    #root .abs { position: absolute; }
+
+    #e3-pill {
+      left: 0; right: 0; top: 130px; margin: 0 auto; width: max-content;
+      padding: 18px 44px; border-radius: 999px; background: #ffb703; color: #0b1430;
+      font-weight: 900; font-size: 46px; letter-spacing: 1px; white-space: nowrap; box-shadow: 0 10px 0 #fb8500;
+    }
+
+    /* Paso A: la resta de las lecturas */
+    #e3-math { left: 190px; top: 360px; width: 700px; text-align: right; font-weight: 900; }
+    #e3-math .ln { font-size: 104px; line-height: 1.25; }
+    #e3-math .minus { color: #c9d0ea; }
+    #e3-rule { height: 12px; margin: 18px 0 22px; border-radius: 6px; background: #fff; transform-origin: right center; }
+    #e3-result { font-size: 140px; color: #ffb703; line-height: 1.05; }
+    #e3-result small { font-size: 64px; }
+
+    /* Paso B: escalones de la tarifa 1 (por bimestre) */
+    #e3-chip {
+      left: 0; right: 0; top: 290px; margin: 0 auto; width: max-content;
+      padding: 14px 34px; border-radius: 18px; background: rgba(255,183,3,.15);
+      border: 4px solid #ffb703; font-size: 40px; font-weight: 800; white-space: nowrap;
+    }
+    #e3-chip b { color: #ffb703; font-size: 50px; }
+
+    #root .step { bottom: 520px; width: 270px; border-radius: 22px 22px 6px 6px; background: #2c3a6d; }
+    #e3-step-1 { left: 115px; height: 300px; }
+    #e3-step-2 { left: 405px; height: 470px; }
+    #e3-step-3 { left: 695px; height: 640px; }
+    #root .step .price { position: absolute; left: 0; right: 0; top: 22px; text-align: center; font-size: 56px; font-weight: 900; }
+    #root .step .range { position: absolute; left: 0; right: 0; bottom: 78px; text-align: center; font-size: 30px; font-weight: 800; line-height: 1.15; }
+    #root .step .name { position: absolute; left: 0; right: 0; bottom: 24px; text-align: center; font-size: 34px; font-weight: 900; }
+
+    #root .coin {
+      border-radius: 50%; background: #ffd25a; border: 6px solid #fb8500; color: #0b1430;
+      display: grid; place-items: center; font-weight: 900;
+    }
+    #e3-coin-1 { left: 215px; top: 1000px; width: 70px; height: 70px; font-size: 36px; }
+    #e3-coin-2 { left: 490px; top: 800px; width: 100px; height: 100px; font-size: 52px; }
+    #e3-coin-3 { left: 750px; top: 570px; width: 160px; height: 160px; font-size: 86px; }
+
+    #e3-hot {
+      left: 90px; top: 450px; padding: 14px 26px; border-radius: 16px;
+      background: #d62850; font-size: 40px; font-weight: 900; line-height: 1.15; white-space: nowrap;
+    }
+  </style>
+
+  <div id="root" data-composition-id="escena-3" data-width="1080" data-height="1920">
+    <div id="e3-pill" class="abs">¿POR QUÉ SUBE TANTO?</div>
+
+    <div id="e3-math" class="abs">
+      <div id="e3-ln-1" class="ln">18,742</div>
+      <div id="e3-ln-2" class="ln minus">− 18,330</div>
+      <div id="e3-rule"></div>
+      <div id="e3-result"><span id="e3-result-val">412</span> <small>kWh</small></div>
+    </div>
+
+    <div id="e3-chip" class="abs">Tarifa 1 · <b>kWh</b> por bimestre</div>
+
+    <div id="e3-step-1" class="abs step"><div class="price">$</div><div class="range">0 – 150</div><div class="name">Básico</div></div>
+    <div id="e3-step-2" class="abs step"><div class="price">$$</div><div class="range">151 – 280</div><div class="name">Intermedio</div></div>
+    <div id="e3-step-3" class="abs step"><div class="price">$$$$</div><div class="range">Más de 280</div><div class="name">Excedente</div></div>
+
+    <div id="e3-coin-1" class="abs coin">$</div>
+    <div id="e3-coin-2" class="abs coin">$</div>
+    <div id="e3-coin-3" class="abs coin">$</div>
+
+    <div id="e3-hot" class="abs">¡Más de 3 veces<br />el precio del básico!</div>
+  </div>
+
+  <script>
+    (function () {
+      // Tiempos de la narración (tiempos.js): F[i] = frase i, en segundos locales de la escena
+      const F = window.GUION.escenas["escena-3"].frases;
+      const tl = gsap.timeline({ paused: true });
+
+      tl.fromTo("#e3-pill", { y: -80, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5, ease: "back.out(2)" }, 0);
+
+      // Lectura actual − lectura anterior = kWh consumidos
+      tl.fromTo("#e3-ln-1", { x: 80, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.4, ease: "power2.out" }, 0.3);
+      tl.fromTo("#e3-ln-2", { x: 80, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.4, ease: "power2.out" }, 0.8);
+      tl.fromTo("#e3-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.35, ease: "power2.out" }, 1.3);
+      tl.fromTo("#e3-result", { scale: 0.6, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.35, ease: "back.out(2)" }, 1.6);
+      const result = { v: 0 };
+      const resultEl = document.getElementById("e3-result-val");
+      tl.fromTo(result, { v: 0 }, {
+        v: 412, duration: 1.2, ease: "power2.out",
+        onUpdate: () => { resultEl.textContent = Math.round(result.v); }
+      }, 1.6);
+
+      // "En tarifa 1, se cobran por escalones"
+      tl.fromTo("#e3-math", { y: 0 }, { y: -80, autoAlpha: 0, duration: 0.35, ease: "power2.in" }, F[1].start - 0.3);
+      tl.fromTo("#e3-chip", { scale: 0.5, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.35, ease: "back.out(2.5)" }, F[1].start);
+      ["#e3-step-1", "#e3-step-2", "#e3-step-3"].forEach((s, i) => {
+        tl.fromTo(s, { scaleY: 0, transformOrigin: "50% 100%" }, { scaleY: 1, duration: 0.5, ease: "power3.out" }, F[1].start + 0.3 + i * 0.35);
+      });
+      tl.fromTo(["#root .step .price", "#root .step .range"], { autoAlpha: 0 }, { autoAlpha: 0.35, duration: 0.3 }, F[1].start + 1.3);
+
+      // Cada escalón se enciende cuando el narrador lo menciona
+      const escalones = [
+        ["#e3-step-1", "#1a8f84", "#e3-coin-1", F[2].start, 0.6],
+        ["#e3-step-2", "#b35400", "#e3-coin-2", F[3].start, 0.6],
+        ["#e3-step-3", "#d62850", "#e3-coin-3", F[4].start, 0.7],
+      ];
+      escalones.forEach(([s, color, coin, t, d]) => {
+        tl.fromTo(s, { backgroundColor: "#2c3a6d" }, { backgroundColor: color, duration: 0.3, immediateRender: false }, t);
+        tl.fromTo([s + " .price", s + " .range"], { autoAlpha: 0.35 }, { autoAlpha: 1, duration: 0.3, immediateRender: false }, t);
+        tl.fromTo(coin, { y: -260, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: d, ease: "bounce.out" }, t + 0.1);
+      });
+
+      // "…que cuesta más de tres veces lo que el básico"
+      tl.fromTo("#e3-step-3", { x: 0 }, { x: 14, duration: 0.06, repeat: 7, yoyo: true, ease: "none", immediateRender: false }, F[5].start);
+      tl.fromTo("#e3-hot", { scale: 0, rotation: -5, autoAlpha: 0 }, { scale: 1, rotation: -5, autoAlpha: 1, duration: 0.4, ease: "back.out(3)" }, F[5].start + 0.1);
+      tl.fromTo("#e3-hot", { scale: 1 }, { scale: 1.08, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut", immediateRender: false }, F[5].end - 0.2);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["escena-3"] = tl;
+    })();
+  </script>
+</template>

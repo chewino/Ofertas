@@ -14,23 +14,25 @@
 
     #e4-avg-lbl { left: 0; right: 0; top: 975px; text-align: center; font-size: 38px; font-weight: 800; color: #c9d0ea; }
 
+    /* Límites de otras tarifas */
+    #e4-limits { left: 0; right: 0; top: 1415px; margin: 0 auto; width: max-content; display: flex; gap: 14px; }
+    #e4-limits .lim {
+      padding: 8px 18px; border-radius: 12px; background: #26366e; border: 3px solid #3c4f92;
+      font-size: 30px; font-weight: 800; white-space: nowrap;
+    }
+    #e4-limits .lim b { color: #ffd25a; }
+
     #e4-stamp {
       left: 0; right: 0; top: 925px; margin: 0 auto; width: max-content;
       padding: 10px 34px; border: 9px solid #ef476f; border-radius: 18px;
       color: #ef476f; background: rgba(15,27,61,.85);
       font-size: 72px; font-weight: 900; letter-spacing: 3px; white-space: nowrap;
     }
-
-    #e4-total {
-      left: 190px; top: 1100px; width: 700px; height: 330px;
-      background: #fdfcf7; color: #0b1430; border-radius: 30px; padding: 40px 50px;
-      box-shadow: 0 24px 50px rgba(0,0,0,.35);
+    #e4-exit {
+      left: 0; right: 0; top: 960px; margin: 0 auto; width: max-content;
+      padding: 14px 32px; border-radius: 18px; background: #2ec4b6; color: #0b1430;
+      font-size: 42px; font-weight: 900; white-space: nowrap; box-shadow: 0 8px 0 #1a8f84;
     }
-    #e4-total .t-lbl { font-size: 40px; font-weight: 800; }
-    #e4-total .t-amt { position: relative; display: inline-block; margin-top: 10px; font-size: 110px; font-weight: 900; color: #5b6488; }
-    #e4-strike { position: absolute; left: -10px; right: -10px; top: 52%; height: 14px; border-radius: 7px; background: #d62850; transform-origin: left center; }
-    #e4-arrow { right: 50px; top: 40px; width: 150px; height: 194px; }
-    #e4-more { left: 50px; bottom: 28px; font-size: 40px; font-weight: 900; color: #c81d45; }
   </style>
 
   <div id="root" data-composition-id="escena-4" data-width="1080" data-height="1920">
@@ -41,7 +43,7 @@
       <g id="e4-gauge">
         <path d="M210 880 A330 330 0 0 1 438 566.2" fill="none" stroke="#1a8f84" stroke-width="72" />
         <path d="M438 566.2 A330 330 0 0 1 734 613" fill="none" stroke="#fb8500" stroke-width="72" />
-        <path id="e4-red" d="M734 613 A330 330 0 0 1 870 880" fill="none" stroke="#d62850" stroke-width="72" />
+        <path d="M734 613 A330 330 0 0 1 870 880" fill="none" stroke="#d62850" stroke-width="72" />
         <path id="e4-red-glow" d="M734 613 A330 330 0 0 1 870 880" fill="none" stroke="#ff5d7d" stroke-width="96" opacity="0" />
         <text x="232" y="640" text-anchor="end" font-size="40" fill="#2ec4b6">Tu tarifa</text>
         <text id="e4-dac" x="850" y="665" text-anchor="start" font-size="56" fill="#ef476f">DAC</text>
@@ -52,7 +54,7 @@
       <circle cx="540" cy="880" r="34" fill="#fff" />
       <circle cx="540" cy="880" r="14" fill="#0b1430" />
 
-      <!-- Promedio de los últimos 12 meses (base 1380, límite 180) -->
+      <!-- Promedio de los últimos 12 meses (base 1380; límite 250 kWh/mes = 180 px) -->
       <g id="e4-bars">
         <rect class="bar ok"   x="152" y="1280" width="50" height="100" rx="8" />
         <rect class="bar ok"   x="217" y="1260" width="50" height="120" rx="8" />
@@ -70,25 +72,26 @@
       </g>
       <g id="e4-limit">
         <line x1="130" y1="1200" x2="940" y2="1200" stroke="#ffd25a" stroke-width="6" stroke-dasharray="18 14" />
-        <text x="140" y="1180" font-size="30" fill="#ffd25a">Límite de tu tarifa</text>
+        <text x="140" y="1180" font-size="30" fill="#ffd25a">Límite tarifa 1: 250 kWh al mes</text>
       </g>
     </svg>
-    <div id="e4-avg-lbl" class="abs">Promedio de los últimos 12 meses</div>
+    <div id="e4-avg-lbl" class="abs">Promedio mensual de los últimos 12 meses</div>
+
+    <div id="e4-limits" class="abs">
+      <div class="lim">1A: <b>300</b></div>
+      <div class="lim">1B: <b>400</b></div>
+      <div class="lim">1C: <b>850</b></div>
+      <div class="lim">kWh/mes</div>
+    </div>
 
     <div id="e4-stamp" class="abs">SIN SUBSIDIO</div>
-
-    <div id="e4-total" class="abs">
-      <div class="t-lbl">Total a pagar</div>
-      <div class="t-amt">$1,027<div id="e4-strike"></div></div>
-      <svg id="e4-arrow" class="abs" viewBox="0 0 170 220">
-        <path d="M85 0 L170 100 H118 V220 H52 V100 H0z" fill="#d62850" />
-      </svg>
-      <div id="e4-more" class="abs">¡Mucho más!</div>
-    </div>
+    <div id="e4-exit" class="abs">Para salir: baja tu promedio</div>
   </div>
 
   <script>
     (function () {
+      // Tiempos de la narración (tiempos.js): F[i] = frase i, en segundos locales de la escena
+      const F = window.GUION.escenas["escena-4"].frases;
       const tl = gsap.timeline({ paused: true });
       gsap.set("#e4-bars .ok", { attr: { fill: "#2ec4b6" } });
       gsap.set("#e4-bars .over", { attr: { fill: "#ef476f" } });
@@ -98,27 +101,32 @@
       tl.fromTo("#e4-gauge", { scale: 0.8, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.5, ease: "back.out(1.6)" }, 0.2);
       tl.fromTo("#e4-needle", { rotation: -90 }, { rotation: -70, duration: 0.5, ease: "power2.out" }, 0.4);
 
-      // 0.9–5 s · "Si tu promedio de los últimos doce meses rebasa el límite de tu tarifa"
-      tl.fromTo("#e4-avg-lbl", { y: 20, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.3 }, 0.9);
-      tl.fromTo("#e4-bars .bar", { scaleY: 0, transformOrigin: "50% 100%" }, { scaleY: 1, duration: 0.3, stagger: 0.28, ease: "power2.out" }, 1.0);
-      tl.fromTo("#e4-limit", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 }, 2.6);
-      tl.fromTo("#e4-needle", { rotation: -70 }, { rotation: 0, duration: 3.6, ease: "none", immediateRender: false }, 1.0);
+      // "Si tu promedio mensual de los últimos doce meses…": van saliendo los 12 meses
+      const meses = F[1].end - F[0].start - 0.6;
+      tl.fromTo("#e4-avg-lbl", { y: 20, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.3 }, F[0].start);
+      tl.fromTo("#e4-bars .bar", { scaleY: 0, transformOrigin: "50% 100%" }, { scaleY: 1, duration: 0.3, stagger: (meses - 0.3) / 11, ease: "power2.out" }, F[0].start + 0.3);
+      tl.fromTo("#e4-needle", { rotation: -70 }, { rotation: 0, duration: meses, ease: "none", immediateRender: false }, F[0].start + 0.3);
 
-      // 5.2 s · "Pasas a la tarifa DAC, sin subsidio"
-      tl.fromTo("#e4-needle", { rotation: 0 }, { rotation: 64, duration: 1.0, ease: "elastic.out(1, 0.45)", immediateRender: false }, 5.2);
-      tl.fromTo("#e4-red-glow", { opacity: 0 }, { opacity: 0.6, duration: 0.25, yoyo: true, repeat: 3 }, 5.3);
-      tl.fromTo("#e4-dac", { scale: 1 }, { scale: 1.25, transformOrigin: "50% 50%", duration: 0.25, yoyo: true, repeat: 1 }, 5.4);
-      tl.fromTo("#e4-avg-lbl", { y: 0 }, { y: -20, autoAlpha: 0, duration: 0.25, immediateRender: false }, 5.55);
-      tl.fromTo("#e4-stamp", { scale: 2.2, rotation: -6, autoAlpha: 0 }, { scale: 1, rotation: -6, autoAlpha: 1, duration: 0.3, ease: "power3.in" }, 5.8);
-      tl.fromTo("#e4-stamp", { x: 0 }, { x: 10, duration: 0.05, repeat: 5, yoyo: true, ease: "none", immediateRender: false }, 6.1);
+      // "…pasa de 250 kWh en tarifa 1, o del límite de tu tarifa"
+      tl.fromTo("#e4-limit", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 }, F[1].start);
+      tl.fromTo("#e4-limits .lim", { y: 30, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.3, stagger: 0.12 }, F[1].start + 2.2);
 
-      // 8.4 s · "Ahí el recibo puede subir muchísimo"
-      tl.fromTo(["#e4-bars", "#e4-limit"], { y: 0 }, { y: 40, autoAlpha: 0, duration: 0.3, immediateRender: false }, 8.1);
-      tl.fromTo("#e4-total", { y: 80, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4, ease: "back.out(1.6)" }, 8.4);
-      tl.fromTo("#e4-strike", { scaleX: 0 }, { scaleX: 1, duration: 0.3, ease: "power2.out" }, 9.0);
-      tl.fromTo("#e4-arrow", { scale: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, transformOrigin: "50% 100%", duration: 0.4, ease: "back.out(2.5)" }, 9.3);
-      tl.fromTo("#e4-more", { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.3 }, 9.5);
-      tl.fromTo("#e4-arrow", { y: 0 }, { y: -16, duration: 0.3, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, 10.2);
+      // "CFE te cambia a la tarifa DAC, sin subsidio"
+      tl.fromTo("#e4-needle", { rotation: 0 }, { rotation: 64, duration: 1.0, ease: "elastic.out(1, 0.45)", immediateRender: false }, F[2].start);
+      tl.fromTo("#e4-red-glow", { opacity: 0 }, { opacity: 0.6, duration: 0.25, yoyo: true, repeat: 3 }, F[2].start + 0.1);
+      tl.fromTo("#e4-dac", { scale: 1 }, { scale: 1.25, transformOrigin: "50% 50%", duration: 0.25, yoyo: true, repeat: 1 }, F[2].start + 0.2);
+      tl.fromTo("#e4-avg-lbl", { y: 0 }, { y: -20, autoAlpha: 0, duration: 0.25, immediateRender: false }, F[2].start + 0.6);
+      tl.fromTo("#e4-stamp", { scale: 2.2, rotation: -6, autoAlpha: 0 }, { scale: 1, rotation: -6, autoAlpha: 1, duration: 0.3, ease: "power3.in" }, F[2].end - 1.1);
+      tl.fromTo("#e4-stamp", { x: 0 }, { x: 10, duration: 0.05, repeat: 5, yoyo: true, ease: "none", immediateRender: false }, F[2].end - 0.8);
+
+      // "Y para salir de ella, tienes que bajar ese promedio"
+      tl.fromTo("#e4-stamp", { scale: 1 }, { scale: 0.8, autoAlpha: 0, duration: 0.3, immediateRender: false }, F[3].start);
+      tl.fromTo("#e4-exit", { scale: 0.5, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.35, ease: "back.out(2.5)" }, F[3].start + 0.2);
+      tl.fromTo("#e4-bars .over", { scaleY: 1 }, {
+        scaleY: (i, el) => 165 / Number(el.getAttribute("height")),
+        attr: { fill: "#2ec4b6" }, duration: 0.6, stagger: 0.12, ease: "power2.inOut", immediateRender: false,
+      }, F[3].start + 1.0);
+      tl.fromTo("#e4-needle", { rotation: 64 }, { rotation: -40, duration: 1.2, ease: "power2.inOut", immediateRender: false }, F[3].start + 1.2);
 
       window.__timelines = window.__timelines || {};
       window.__timelines["escena-4"] = tl;

@@ -1,0 +1,98 @@
+{
+  "voz": "ef_dora",
+  "velocidad": 1.05,
+  "acento": "es-419",
+  "pausa_entre_frases": 0.25,
+  "pausa_entre_escenas": 0.6,
+  "cola_final": 1.5,
+  "escenas": [
+    {
+      "id": "escena-1",
+      "titulo": "El gancho",
+      "frases": [
+        { "tts": "¿Te llegó el recibo de luz y sentiste que te cayó un rayo?",
+          "subtitulo": "¿Te llegó el recibo de luz y sentiste que te cayó un <em>rayo</em>?" },
+        { "tts": "Tranquilo: en poco más de un minuto te explico cómo leerlo y cómo pagar menos.",
+          "subtitulo": "Tranquilo: en poco más de un minuto te explico cómo leerlo y <em>cómo pagar menos</em>." }
+      ]
+    },
+    {
+      "id": "escena-2",
+      "titulo": "Las partes del recibo",
+      "frases": [
+        { "tts": "Primero ubica cuatro datos:",
+          "subtitulo": "Primero ubica <em>cuatro datos</em>:" },
+        { "tts": "tu tarifa, que viene impresa en el recibo, por ejemplo, tarifa uno;",
+          "subtitulo": "tu <em>tarifa</em>, que viene impresa en el recibo, por ejemplo, tarifa 1;" },
+        { "tts": "el periodo, que en casa normalmente es de dos meses;",
+          "subtitulo": "el <em>periodo</em>, que en casa normalmente es de dos meses;" },
+        { "tts": "las lecturas del medidor, la actual y la anterior;",
+          "subtitulo": "las <em>lecturas del medidor</em>, la actual y la anterior;" },
+        { "tts": "y el total a pagar.",
+          "subtitulo": "y el <em>total a pagar</em>." }
+      ]
+    },
+    {
+      "id": "escena-3",
+      "titulo": "Por qué sube tanto",
+      "frases": [
+        { "tts": "La resta de esas lecturas son los kilowatts que consumiste.",
+          "subtitulo": "La resta de esas lecturas son los <em>kilowatts</em> que consumiste." },
+        { "tts": "En tarifa uno, se cobran por escalones:",
+          "subtitulo": "En tarifa 1, se cobran por <em>escalones</em>:" },
+        { "tts": "los primeros ciento cincuenta del bimestre son consumo básico,",
+          "subtitulo": "los primeros <em>150</em> del bimestre son consumo básico," },
+        { "tts": "los siguientes ciento treinta, intermedio,",
+          "subtitulo": "los siguientes <em>130</em>, intermedio," },
+        { "tts": "y todo lo que pase de doscientos ochenta es excedente,",
+          "subtitulo": "y todo lo que pase de <em>280</em> es excedente," },
+        { "tts": "que cuesta más de tres veces lo que el básico.",
+          "subtitulo": "que cuesta <em>más de tres veces</em> lo que el básico." }
+      ]
+    },
+    {
+      "id": "escena-4",
+      "titulo": "Cuidado con la tarifa DAC",
+      "frases": [
+        { "tts": "Y cuidado: si tu promedio mensual de los últimos doce meses",
+          "subtitulo": "Y cuidado: si tu <em>promedio mensual</em> de los últimos doce meses" },
+        { "tts": "pasa de doscientos cincuenta kilowatts en tarifa uno, o del límite de tu tarifa,",
+          "subtitulo": "pasa de <em>250 kWh</em> en tarifa 1, o del límite de tu tarifa," },
+        { "tts": "ce, efe, e, te cambia a la tarifa dac, sin subsidio.",
+          "subtitulo": "CFE te cambia a la <em>tarifa DAC</em>, sin subsidio." },
+        { "tts": "Y para salir de ella, tienes que bajar ese promedio.",
+          "subtitulo": "Y para salir de ella, tienes que <em>bajar ese promedio</em>." }
+      ]
+    },
+    {
+      "id": "escena-5",
+      "titulo": "Cómo pagar menos",
+      "frases": [
+        { "tts": "Revisa los kilowatts consumidos en tu recibo,",
+          "subtitulo": "Revisa los <em>kilowatts consumidos</em> en tu recibo," },
+        { "tts": "compara con el bimestre anterior",
+          "subtitulo": "compara con el <em>bimestre anterior</em>" },
+        { "tts": "y reduce el uso de aparatos de alto consumo.",
+          "subtitulo": "y reduce el uso de aparatos de <em>alto consumo</em>." },
+        { "tts": "Así podrás detectar dónde se está yendo la energía.",
+          "subtitulo": "Así podrás detectar dónde se está yendo la energía." },
+        { "tts": "Y desconecta lo que no uses: los aparatos en espera pueden gastar cerca del diez por ciento de tu luz.",
+          "subtitulo": "Y desconecta lo que no uses: los aparatos en espera pueden gastar <em>cerca del 10 %</em> de tu luz." }
+      ]
+    },
+    {
+      "id": "escena-6",
+      "titulo": "Participación del público",
+      "frases": [
+        { "tts": "Y ahora dime:",
+          "subtitulo": "Y ahora dime:" },
+        { "tts": "¿cuánto te llegó de luz este último bimestre?",
+          "subtitulo": "¿cuánto te llegó de luz este último bimestre?" },
+        { "tts": "¿Menos de trescientos, entre trescientos y ochocientos, o más de ochocientos pesos?",
+          "subtitulo": "¿Menos de <em>300</em>, entre <em>300 y 800</em>, o más de <em>800</em> pesos?" },
+        { "tts": "¡Te leemos en los comentarios!",
+          "subtitulo": null }
+      ]
+    }
+  ]
+}

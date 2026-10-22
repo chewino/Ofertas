@@ -32,7 +32,7 @@
     }
     #e1-bill .b-title { font-size: 54px; font-weight: 900; letter-spacing: 2px; }
     #e1-bill .b-sub { font-size: 36px; font-weight: 600; color: #5b6488; margin-top: 6px; }
-    #e1-bill .b-lbl { margin-top: 70px; font-size: 42px; font-weight: 800; }
+    #e1-bill .b-lbl { margin-top: 60px; font-size: 42px; font-weight: 800; }
     #e1-amount { font-size: 170px; font-weight: 900; color: #c81d45; line-height: 1.05; transform-origin: left center; }
     #e1-bill .b-due { margin-top: 20px; font-size: 36px; font-weight: 700; color: #5b6488; }
 
@@ -44,7 +44,7 @@
       left: 0; right: 0; top: 960px; margin: 0 auto; width: max-content;
       display: flex; align-items: center; gap: 20px;
       padding: 16px 38px 16px 22px; border-radius: 999px; background: #2ec4b6; color: #0b1430;
-      font-size: 48px; font-weight: 900; white-space: nowrap; box-shadow: 0 10px 0 #1a8f84;
+      font-size: 46px; font-weight: 900; white-space: nowrap; box-shadow: 0 10px 0 #1a8f84;
     }
   </style>
 
@@ -106,7 +106,7 @@
         <circle id="e1-ring" cx="40" cy="44" r="22" fill="none" stroke="#ef476f" stroke-width="12"
                 stroke-dasharray="138.2" stroke-dashoffset="138.2" transform="rotate(-90 40 44)" />
       </svg>
-      ¡En menos de 1 minuto!
+      ¡Leerlo y pagar menos!
     </div>
 
     <div id="e1-flash" class="abs"></div>
@@ -114,32 +114,37 @@
 
   <script>
     (function () {
+      // Tiempos de la narración (tiempos.js): F[i] = frase i, en segundos locales de la escena
+      const E = window.GUION.escenas["escena-1"];
+      const F = E.frases;
+      const rayo = F[0].end - 0.6;   // "…te cayó un rayo"
+      const calma = F[1].start;      // "Tranquilo…"
       const tl = gsap.timeline({ paused: true });
 
-      // 0–1.3 s · El recibo se desliza por debajo de la puerta
+      // El recibo se desliza por debajo de la puerta y lo abre
       tl.fromTo("#e1-env", { y: -90, scaleY: 0.2, autoAlpha: 0 }, { y: 0, scaleY: 1, autoAlpha: 1, duration: 0.7, ease: "power3.out" }, 0.2);
       tl.fromTo("#e1-door-wrap", { scale: 1, autoAlpha: 1 }, { scale: 0.92, autoAlpha: 0, duration: 0.4, ease: "power2.in" }, 1.3);
       tl.fromTo("#e1-env", { y: 0, scale: 1 }, { y: -500, scale: 0.5, autoAlpha: 0, duration: 0.4, ease: "power2.in", immediateRender: false }, 1.35);
-
-      // 1.5–3.6 s · Lo abre y el total le cae como rayo
       tl.fromTo("#e1-bill", { scale: 0.3, rotation: -8, autoAlpha: 0 }, { scale: 1, rotation: 0, autoAlpha: 1, duration: 0.5, ease: "back.out(1.8)" }, 1.5);
-      tl.fromTo("#e1-flash", { opacity: 0 }, { opacity: 0.85, duration: 0.08 }, 2.0);
-      tl.fromTo("#e1-flash", { opacity: 0.85 }, { opacity: 0, duration: 0.35, immediateRender: false }, 2.08);
-      tl.fromTo("#e1-bolt", { scale: 0, rotation: -20, autoAlpha: 0 }, { scale: 1, rotation: 0, autoAlpha: 1, duration: 0.3, ease: "back.out(3)" }, 2.0);
-      tl.fromTo("#e1-bill", { x: 0 }, { x: 18, duration: 0.06, repeat: 9, yoyo: true, ease: "none", immediateRender: false }, 2.0);
-      tl.fromTo("#e1-face", { y: 320, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5, ease: "back.out(1.6)" }, 2.2);
-      tl.fromTo("#e1-amount", { scale: 1 }, { scale: 1.12, duration: 0.2, yoyo: true, repeat: 1 }, 2.5);
 
-      // 3.6–8 s · "Tranquilo": se calma y aparece el cronómetro
-      tl.fromTo("#e1-bolt", { scale: 1 }, { scale: 0.6, autoAlpha: 0, duration: 0.3, immediateRender: false }, 3.6);
-      tl.fromTo("#e1-bill", { y: 0, scale: 1 }, { y: -60, scale: 0.8, duration: 0.5, ease: "power2.inOut", immediateRender: false }, 3.6);
-      tl.fromTo("#e1-mouth-o", { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.2 }, 3.7);
-      tl.fromTo("#e1-mouth-smile", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.2 }, 3.75);
-      tl.fromTo("#e1-brows", { y: -22 }, { y: 0, duration: 0.3 }, 3.7);
-      tl.fromTo("#e1-timer", { scale: 0.5, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.4, ease: "back.out(2.2)" }, 4.3);
-      tl.fromTo("#e1-ring", { strokeDashoffset: 138.2 }, { strokeDashoffset: 0, duration: 3.3, ease: "none" }, 4.6);
-      tl.fromTo("#e1-mark", { scale: 1 }, { scale: 1.15, duration: 0.3, yoyo: true, repeat: 1 }, 6.2);
-      tl.fromTo("#e1-face", { rotation: 0 }, { rotation: 4, duration: 0.3, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, 6.6);
+      // El total le cae como rayo
+      tl.fromTo("#e1-flash", { opacity: 0 }, { opacity: 0.85, duration: 0.08 }, rayo);
+      tl.fromTo("#e1-flash", { opacity: 0.85 }, { opacity: 0, duration: 0.35, immediateRender: false }, rayo + 0.08);
+      tl.fromTo("#e1-bolt", { scale: 0, rotation: -20, autoAlpha: 0 }, { scale: 1, rotation: 0, autoAlpha: 1, duration: 0.3, ease: "back.out(3)" }, rayo);
+      tl.fromTo("#e1-bill", { x: 0 }, { x: 18, duration: 0.06, repeat: 9, yoyo: true, ease: "none", immediateRender: false }, rayo);
+      tl.fromTo("#e1-face", { y: 320, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5, ease: "back.out(1.6)" }, rayo - 0.6);
+      tl.fromTo("#e1-amount", { scale: 1 }, { scale: 1.12, duration: 0.2, yoyo: true, repeat: 1 }, rayo + 0.3);
+
+      // "Tranquilo": se calma y aparece el cronómetro
+      tl.fromTo("#e1-bolt", { scale: 1 }, { scale: 0.6, autoAlpha: 0, duration: 0.3, immediateRender: false }, calma);
+      tl.fromTo("#e1-bill", { y: 0, scale: 1 }, { y: -60, scale: 0.8, duration: 0.5, ease: "power2.inOut", immediateRender: false }, calma);
+      tl.fromTo("#e1-mouth-o", { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.2 }, calma + 0.1);
+      tl.fromTo("#e1-mouth-smile", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.2 }, calma + 0.15);
+      tl.fromTo("#e1-brows", { y: -22 }, { y: 0, duration: 0.3 }, calma + 0.1);
+      tl.fromTo("#e1-timer", { scale: 0.5, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.4, ease: "back.out(2.2)" }, calma + 0.7);
+      tl.fromTo("#e1-ring", { strokeDashoffset: 138.2 }, { strokeDashoffset: 0, duration: E.duracion - calma - 1.1, ease: "none" }, calma + 1.0);
+      tl.fromTo("#e1-mark", { scale: 1 }, { scale: 1.15, duration: 0.3, yoyo: true, repeat: 1 }, calma + 2.4);
+      tl.fromTo("#e1-face", { rotation: 0 }, { rotation: 4, duration: 0.3, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, calma + 2.8);
 
       window.__timelines = window.__timelines || {};
       window.__timelines["escena-1"] = tl;

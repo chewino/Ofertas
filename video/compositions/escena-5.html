@@ -5,7 +5,7 @@
     #root .abs { position: absolute; }
 
     #e5-pill {
-      left: 50%; top: 130px;
+      left: 0; right: 0; top: 130px; margin: 0 auto; width: max-content;
       padding: 18px 44px; border-radius: 999px;
       background: #ffb703; color: #0b1430;
       font-weight: 900; font-size: 46px; letter-spacing: 1px; white-space: nowrap;
@@ -66,6 +66,9 @@
                            padding: 6px 14px; border-radius: 10px; background: #ef476f;
                            font-size: 28px; font-weight: 900; white-space: nowrap; }
     #e5-house .tv-screen { position: absolute; inset: 18px 18px 40px; border-radius: 10px; background: linear-gradient(135deg, #4cc9f0, #4361ee); }
+    #e5-house .badge-wait { background: #ffb703; color: #0b1430; }
+    #e5-tv-pct { position: absolute; inset: 18px 18px 40px; display: grid; place-items: center;
+                 font-size: 64px; font-weight: 900; color: #ffd25a; }
     #e5-house .tv-stand { position: absolute; left: 85px; bottom: 10px; width: 68px; height: 14px; background: #3c4f92; border-radius: 6px; }
     #e5-house .mw-window { position: absolute; left: 20px; top: 26px; width: 140px; height: 156px; border-radius: 12px;
                            background: radial-gradient(circle at 50% 60%, #ffd166, #f8961e); }
@@ -157,7 +160,8 @@
       </div>
 
       <div id="e5-app-tv" class="appliance" style="left: 40px">
-        <div class="app-body"><div class="tv-screen live"></div><div class="tv-stand"></div></div>
+        <div id="e5-tv-badge" class="badge-hot badge-wait">EN ESPERA</div>
+        <div class="app-body"><div class="tv-screen live"></div><div id="e5-tv-pct">≈10 %</div><div class="tv-stand"></div></div>
         <div class="app-lbl">Televisión</div>
       </div>
       <div id="e5-app-mw" class="appliance" style="left: 355px">
@@ -206,57 +210,62 @@
 
   <script>
     (function () {
+      // Tiempos de la narración (tiempos.js): F[i] = frase i, en segundos locales de la escena
+      const F = window.GUION.escenas["escena-5"].frases;
       const tl = gsap.timeline({ paused: true });
 
-      // Entrada (0–1 s)
-      tl.fromTo("#e5-pill", { xPercent: -50, y: -80, autoAlpha: 0 }, { xPercent: -50, y: 0, autoAlpha: 1, duration: 0.5, ease: "back.out(2)" }, 0);
+      // "Revisa los kilowatts consumidos en tu recibo": la familia revisa el recibo
+      tl.fromTo("#e5-pill", { y: -80, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5, ease: "back.out(2)" }, 0);
       tl.fromTo("#e5-family", { y: 160, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6, ease: "power3.out" }, 0.1);
       tl.fromTo("#e5-receipt", { y: 120, rotation: -6, autoAlpha: 0 }, { y: 0, rotation: 0, autoAlpha: 1, duration: 0.7, ease: "power3.out" }, 0.2);
-
-      // La familia revisa el recibo: se inclinan hacia él
       tl.fromTo("#e5-dad", { rotation: 0 }, { rotation: 6, svgOrigin: "140 300", duration: 0.5, yoyo: true, repeat: 3, ease: "sine.inOut" }, 0.8);
       tl.fromTo("#e5-mom", { rotation: 0 }, { rotation: -6, svgOrigin: "460 300", duration: 0.5, yoyo: true, repeat: 3, ease: "sine.inOut" }, 0.9);
       tl.fromTo("#e5-kid", { y: 0 }, { y: -18, duration: 0.25, yoyo: true, repeat: 7, ease: "sine.inOut" }, 0.8);
+      tl.fromTo("#e5-lens", { x: -320, y: -160, autoAlpha: 0 }, { x: 0, y: 0, autoAlpha: 1, duration: 0.8, ease: "power2.out" }, F[0].start + 0.6);
+      tl.fromTo("#e5-kwh", { scale: 1 }, { scale: 1.08, duration: 0.3, yoyo: true, repeat: 3, ease: "sine.inOut" }, F[0].start + 1.4);
 
-      // Lupa sobre los kWh consumidos
-      tl.fromTo("#e5-lens", { x: -320, y: -160, autoAlpha: 0 }, { x: 0, y: 0, autoAlpha: 1, duration: 0.8, ease: "power2.out" }, 1.0);
-      tl.fromTo("#e5-kwh", { scale: 1 }, { scale: 1.08, duration: 0.3, yoyo: true, repeat: 3, ease: "sine.inOut" }, 1.8);
+      // "Compara con el bimestre anterior"
+      const comparar = F[1].start - 0.1;
+      tl.fromTo(["#e5-receipt", "#e5-lens"], { x: 0 }, { x: -900, autoAlpha: 0, duration: 0.5, ease: "power2.in", immediateRender: false }, comparar - 0.3);
+      tl.fromTo("#e5-compare", { x: 900, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.5, ease: "power2.out" }, comparar);
+      tl.fromTo("#e5-bar-prev", { scaleY: 0, transformOrigin: "50% 100%" }, { scaleY: 1, duration: 0.6, ease: "power2.out" }, comparar + 0.4);
+      tl.fromTo("#e5-bar-now", { scaleY: 0, transformOrigin: "50% 100%" }, { scaleY: 1, duration: 0.7, ease: "power2.out" }, comparar + 0.8);
+      tl.fromTo(["#e5-num-prev", "#e5-num-now"], { y: 20, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.4, duration: 0.3 }, comparar + 0.7);
+      tl.fromTo("#e5-delta", { scale: 0, rotation: -6, autoAlpha: 0 }, { scale: 1, rotation: -6, autoAlpha: 1, duration: 0.4, ease: "back.out(3)" }, comparar + 1.5);
 
-      // Paso 2: comparar (3.0–5.6 s)
-      tl.fromTo(["#e5-receipt", "#e5-lens"], { x: 0 }, { x: -900, autoAlpha: 0, duration: 0.5, ease: "power2.in", immediateRender: false }, 2.9);
-      tl.fromTo("#e5-compare", { x: 900, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.5, ease: "power2.out" }, 3.1);
-      tl.fromTo("#e5-bar-prev", { scaleY: 0, transformOrigin: "50% 100%" }, { scaleY: 1, duration: 0.6, ease: "power2.out" }, 3.5);
-      tl.fromTo("#e5-bar-now", { scaleY: 0, transformOrigin: "50% 100%" }, { scaleY: 1, duration: 0.7, ease: "power2.out" }, 3.9);
-      tl.fromTo(["#e5-num-prev", "#e5-num-now"], { y: 20, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.4, duration: 0.3 }, 3.8);
-      tl.fromTo("#e5-delta", { scale: 0, rotation: -6, autoAlpha: 0 }, { scale: 1, rotation: -6, autoAlpha: 1, duration: 0.4, ease: "back.out(3)" }, 4.6);
-
-      // Paso 3: desconectar y apagar (5.6–9 s)
-      tl.fromTo("#e5-compare", { x: 0 }, { x: -900, autoAlpha: 0, duration: 0.5, ease: "power2.in", immediateRender: false }, 5.5);
-      tl.fromTo("#e5-house", { x: 900, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.5, ease: "power2.out" }, 5.7);
-      tl.fromTo("#e5-meter", { y: 40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4 }, 6.0);
-
-      // Desconectar aparatos de alto consumo
-      [["#e5-plug-2", "#e5-app-mw"], ["#e5-plug-3", "#e5-app-heat"], ["#e5-plug-1", "#e5-app-tv"]].forEach(([plug, app], i) => {
-        const t = 6.3 + i * 0.45;
-        tl.fromTo(plug, { y: 0, rotation: 0 }, { y: -60, rotation: i % 2 ? 18 : -18, duration: 0.3, ease: "power2.out" }, t);
+      // "Y reduce el uso de aparatos de alto consumo": se desconectan microondas y calentador
+      const reducir = F[2].start;
+      tl.fromTo("#e5-compare", { x: 0 }, { x: -900, autoAlpha: 0, duration: 0.5, ease: "power2.in", immediateRender: false }, reducir - 0.3);
+      tl.fromTo("#e5-house", { x: 900, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.5, ease: "power2.out" }, reducir - 0.1);
+      tl.fromTo("#e5-meter", { y: 40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4 }, reducir + 0.2);
+      function desconectar(plug, app, t, giro) {
+        tl.fromTo(plug, { y: 0, rotation: 0 }, { y: -60, rotation: giro, duration: 0.3, ease: "power2.out" }, t);
         tl.fromTo(app + " .live", { opacity: 1, filter: "grayscale(0)" }, { opacity: 0.12, filter: "grayscale(1)", duration: 0.3 }, t + 0.1);
-      });
+      }
+      desconectar("#e5-plug-2", "#e5-app-mw", reducir + 0.9, -18);
+      desconectar("#e5-plug-3", "#e5-app-heat", reducir + 1.5, 18);
 
-      // Apagar luces una por una
+      // "Así podrás detectar dónde se está yendo la energía": se apagan las luces
       ["#e5-bulb-1", "#e5-bulb-2", "#e5-bulb-3"].forEach((b, i) => {
-        const t = 7.5 + i * 0.3;
+        const t = F[3].start + 0.4 + i * 0.35;
         tl.fromTo(b + " .glow", { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.2 }, t);
         tl.fromTo(b + " .glass", { attr: { fill: "#ffd25a" } }, { attr: { fill: "#3a4566" }, duration: 0.2 }, t);
       });
 
-      // El contador de consumo baja
+      // "Y desconecta lo que no uses: los aparatos en espera pueden gastar cerca del 10 %"
+      tl.fromTo("#e5-tv-badge", { scale: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.35, ease: "back.out(3)" }, F[4].start + 0.3);
+      desconectar("#e5-plug-1", "#e5-app-tv", F[4].start + 1.4, -18);
+      tl.fromTo("#e5-tv-pct", { scale: 0.4, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.4, ease: "back.out(2.5)" }, F[4].end - 2.0);
+      tl.fromTo("#e5-tv-pct", { scale: 1 }, { scale: 1.12, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut", immediateRender: false }, F[4].end - 1.2);
+
+      // El contador de consumo baja con cada acción
       const meter = { v: 412 };
       const meterEl = document.getElementById("e5-meter-val");
-      tl.fromTo(meter, { v: 412 }, {
-        v: 298, duration: 2.4, ease: "power1.inOut",
-        onUpdate: () => { meterEl.textContent = Math.round(meter.v); }
-      }, 6.3);
-      tl.fromTo("#e5-meter", { scale: 1 }, { scale: 1.1, duration: 0.25, yoyo: true, repeat: 1 }, 8.4);
+      const mostrar = () => { meterEl.textContent = Math.round(meter.v); };
+      tl.fromTo(meter, { v: 412 }, { v: 340, duration: 1.4, ease: "power1.inOut", onUpdate: mostrar }, reducir + 0.9);
+      tl.fromTo(meter, { v: 340 }, { v: 315, duration: 1.0, ease: "power1.inOut", onUpdate: mostrar, immediateRender: false }, F[3].start + 0.4);
+      tl.fromTo(meter, { v: 315 }, { v: 298, duration: 1.0, ease: "power1.inOut", onUpdate: mostrar, immediateRender: false }, F[4].start + 1.4);
+      tl.fromTo("#e5-meter", { scale: 1 }, { scale: 1.1, duration: 0.25, yoyo: true, repeat: 1 }, F[4].start + 2.4);
 
       window.__timelines = window.__timelines || {};
       window.__timelines["escena-5"] = tl;
