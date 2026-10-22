@@ -1,0 +1,264 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; color: #fff; font-family: "Montserrat", sans-serif; }
+    #root .abs { position: absolute; }
+
+    #e5-pill {
+      left: 50%; top: 130px;
+      padding: 18px 44px; border-radius: 999px;
+      background: #ffb703; color: #0b1430;
+      font-weight: 900; font-size: 46px; letter-spacing: 1px; white-space: nowrap;
+      box-shadow: 0 10px 0 #fb8500;
+    }
+
+    /* Paso 1: recibo */
+    #e5-receipt {
+      left: 190px; top: 330px; width: 700px; height: 660px;
+      background: #fdfcf7; color: #0b1430; border-radius: 26px;
+      padding: 44px 50px; box-shadow: 0 30px 60px rgba(0,0,0,.35);
+    }
+    #e5-receipt .r-title { font-weight: 900; font-size: 52px; letter-spacing: 2px; }
+    #e5-receipt .r-sub { font-weight: 600; font-size: 28px; color: #5b6488; margin: 6px 0 30px; }
+    #e5-receipt .r-row { display: flex; justify-content: space-between; font-size: 32px; font-weight: 600;
+                         padding: 18px 0; border-bottom: 3px dashed #d8dbe8; }
+    #e5-kwh {
+      margin-top: 34px; padding: 26px 30px; border-radius: 18px;
+      background: #fff4d6; border: 5px solid #ffb703;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    #e5-kwh .lbl { font-size: 32px; font-weight: 800; }
+    #e5-kwh .val { font-size: 78px; font-weight: 900; color: #b35400; }
+    #e5-kwh .val small { font-size: 34px; }
+    #e5-receipt .r-total { margin-top: 30px; display: flex; justify-content: space-between; font-size: 38px; font-weight: 900; }
+    #e5-lens { left: 600px; top: 560px; width: 230px; height: 230px; }
+
+    /* Paso 2: comparación */
+    #e5-compare {
+      left: 140px; top: 300px; width: 800px; height: 760px;
+      background: rgba(255,255,255,.06); border: 3px solid rgba(255,255,255,.14);
+      border-radius: 30px; padding: 46px 50px;
+    }
+    #e5-compare .c-title { font-size: 46px; font-weight: 900; text-align: center; }
+    #e5-compare .c-title span { color: #ffb703; }
+    #e5-compare .bars { position: absolute; left: 0; right: 0; bottom: 70px; height: 520px;
+                        display: flex; justify-content: center; align-items: flex-end; gap: 120px; }
+    #e5-compare .bar-col { width: 210px; display: flex; flex-direction: column; align-items: center; }
+    #e5-compare .bar-num { font-size: 50px; font-weight: 900; margin-bottom: 14px; }
+    #e5-compare .bar { width: 100%; border-radius: 18px 18px 6px 6px; }
+    #e5-bar-prev { height: 300px; background: #8a94b8; }
+    #e5-bar-now { height: 353px; background: linear-gradient(#ef476f, #c9184a); }
+    #e5-compare .bar-lbl { margin-top: 18px; font-size: 28px; font-weight: 700; color: #c9d0ea; text-align: center; line-height: 1.2; }
+    #e5-delta { right: 70px; top: 170px; padding: 14px 28px; border-radius: 16px; background: #ef476f; font-size: 48px; font-weight: 900; }
+
+    /* Paso 3: casa */
+    #e5-house { left: 60px; top: 290px; width: 960px; height: 790px; }
+    #e5-house .wire { position: absolute; top: 0; width: 6px; height: 60px; background: #55608a; }
+    #e5-house .bulb { position: absolute; top: 50px; width: 120px; height: 200px; }
+    #e5-house .glow { position: absolute; left: -60px; top: -30px; width: 240px; height: 240px; border-radius: 50%;
+                      background: radial-gradient(circle, rgba(255,214,90,.75), rgba(255,183,3,0) 65%); }
+    #e5-house .bulb svg { position: relative; }
+    #e5-house .appliance { position: absolute; top: 330px; width: 250px; text-align: center; }
+    #e5-house .app-body { height: 220px; border-radius: 22px; background: #26366e; border: 6px solid #3c4f92;
+                          position: relative; overflow: hidden; }
+    #e5-house .app-lbl { margin-top: 14px; font-size: 30px; font-weight: 800; }
+    #e5-house .badge-hot { position: absolute; left: -30px; right: -30px; top: -54px; margin: 0 auto; width: max-content;
+                           padding: 6px 14px; border-radius: 10px; background: #ef476f;
+                           font-size: 28px; font-weight: 900; white-space: nowrap; }
+    #e5-house .tv-screen { position: absolute; inset: 18px 18px 40px; border-radius: 10px; background: linear-gradient(135deg, #4cc9f0, #4361ee); }
+    #e5-house .tv-stand { position: absolute; left: 85px; bottom: 10px; width: 68px; height: 14px; background: #3c4f92; border-radius: 6px; }
+    #e5-house .mw-window { position: absolute; left: 20px; top: 26px; width: 140px; height: 156px; border-radius: 12px;
+                           background: radial-gradient(circle at 50% 60%, #ffd166, #f8961e); }
+    #e5-house .mw-pad { position: absolute; right: 18px; top: 30px; width: 44px; height: 150px; border-radius: 8px;
+                        background: repeating-linear-gradient(#3c4f92 0 14px, #1b2756 14px 26px); }
+    #e5-house .heat-coils { position: absolute; inset: 30px 26px; border-radius: 10px;
+                            background: repeating-linear-gradient(90deg, #ff5d5d 0 16px, #7a1f2e 16px 30px); }
+    #e5-house .cord { position: absolute; top: 640px; width: 6px; height: 70px; background: #55608a; }
+    #e5-house .plug { position: absolute; top: 700px; width: 56px; height: 46px; border-radius: 10px; background: #e6e9f5; }
+    #e5-house .plug::before, #e5-house .plug::after { content: ""; position: absolute; bottom: -18px; width: 8px; height: 20px; background: #c0c6dc; }
+    #e5-house .plug::before { left: 13px; }
+    #e5-house .plug::after { right: 13px; }
+    #e5-house .socket { position: absolute; top: 760px; width: 90px; height: 30px; border-radius: 8px; background: #46528a; }
+    #e5-house .floor { position: absolute; left: 0; right: 0; top: 790px; height: 6px; border-radius: 3px; background: #2c3a6d; }
+    #e5-meter {
+      left: 0; right: 0; top: 1085px; margin: 0 auto; width: max-content;
+      padding: 14px 34px; border-radius: 18px; background: rgba(46,196,182,.15);
+      border: 4px solid #2ec4b6; font-size: 36px; font-weight: 800; white-space: nowrap;
+    }
+    #e5-meter b { color: #2ec4b6; font-size: 46px; }
+
+    /* Familia */
+    #e5-family { left: 240px; top: 1180px; width: 600px; height: 300px; }
+  </style>
+
+  <div id="root" data-composition-id="escena-5" data-width="1080" data-height="1920">
+    <div id="e5-pill" class="abs">CÓMO PAGAR MENOS</div>
+
+    <!-- Paso 1: revisar el recibo -->
+    <div id="e5-receipt" class="abs">
+      <div class="r-title">RECIBO DE LUZ</div>
+      <div class="r-sub">Periodo: bimestre actual</div>
+      <div class="r-row"><span>Lectura actual</span><span>18,742</span></div>
+      <div class="r-row"><span>Lectura anterior</span><span>18,330</span></div>
+      <div id="e5-kwh">
+        <span class="lbl">kWh<br />consumidos</span>
+        <span class="val">412 <small>kWh</small></span>
+      </div>
+      <div class="r-total"><span>Total a pagar</span><span>$1,027</span></div>
+    </div>
+    <svg id="e5-lens" class="abs" viewBox="0 0 230 230">
+      <circle cx="90" cy="90" r="70" fill="rgba(255,255,255,.18)" stroke="#0b1430" stroke-width="14" />
+      <line x1="142" y1="142" x2="215" y2="215" stroke="#0b1430" stroke-width="26" stroke-linecap="round" />
+    </svg>
+
+    <!-- Paso 2: comparar con el bimestre anterior -->
+    <div id="e5-compare" class="abs">
+      <div class="c-title">Compara con el <span>bimestre anterior</span></div>
+      <div id="e5-delta" class="abs">+18%</div>
+      <div class="bars">
+        <div class="bar-col">
+          <div id="e5-num-prev" class="bar-num">350</div>
+          <div id="e5-bar-prev" class="bar"></div>
+          <div class="bar-lbl">Bimestre<br />anterior</div>
+        </div>
+        <div class="bar-col">
+          <div id="e5-num-now" class="bar-num" style="color: #ef476f">412</div>
+          <div id="e5-bar-now" class="bar"></div>
+          <div class="bar-lbl">Este<br />bimestre</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Paso 3: desconectar aparatos y apagar luces -->
+    <div id="e5-house" class="abs">
+      <div class="wire" style="left: 177px"></div>
+      <div class="wire" style="left: 477px"></div>
+      <div class="wire" style="left: 777px"></div>
+      <div id="e5-bulb-1" class="bulb" style="left: 120px">
+        <div class="glow"></div>
+        <svg viewBox="0 0 120 200" width="120" height="200">
+          <rect x="40" y="0" width="40" height="34" rx="6" fill="#8a94b8" />
+          <circle class="glass" cx="60" cy="90" r="56" fill="#ffd25a" />
+        </svg>
+      </div>
+      <div id="e5-bulb-2" class="bulb" style="left: 420px">
+        <div class="glow"></div>
+        <svg viewBox="0 0 120 200" width="120" height="200">
+          <rect x="40" y="0" width="40" height="34" rx="6" fill="#8a94b8" />
+          <circle class="glass" cx="60" cy="90" r="56" fill="#ffd25a" />
+        </svg>
+      </div>
+      <div id="e5-bulb-3" class="bulb" style="left: 720px">
+        <div class="glow"></div>
+        <svg viewBox="0 0 120 200" width="120" height="200">
+          <rect x="40" y="0" width="40" height="34" rx="6" fill="#8a94b8" />
+          <circle class="glass" cx="60" cy="90" r="56" fill="#ffd25a" />
+        </svg>
+      </div>
+
+      <div id="e5-app-tv" class="appliance" style="left: 40px">
+        <div class="app-body"><div class="tv-screen live"></div><div class="tv-stand"></div></div>
+        <div class="app-lbl">Televisión</div>
+      </div>
+      <div id="e5-app-mw" class="appliance" style="left: 355px">
+        <div class="badge-hot">ALTO CONSUMO</div>
+        <div class="app-body"><div class="mw-window live"></div><div class="mw-pad"></div></div>
+        <div class="app-lbl">Microondas</div>
+      </div>
+      <div id="e5-app-heat" class="appliance" style="left: 670px">
+        <div class="badge-hot">ALTO CONSUMO</div>
+        <div class="app-body"><div class="heat-coils live"></div></div>
+        <div class="app-lbl">Calentador</div>
+      </div>
+
+      <div class="cord" style="left: 162px"></div>
+      <div class="cord" style="left: 477px"></div>
+      <div class="cord" style="left: 792px"></div>
+      <div id="e5-plug-1" class="plug" style="left: 137px"></div>
+      <div id="e5-plug-2" class="plug" style="left: 452px"></div>
+      <div id="e5-plug-3" class="plug" style="left: 767px"></div>
+      <div class="socket" style="left: 120px"></div>
+      <div class="socket" style="left: 435px"></div>
+      <div class="socket" style="left: 750px"></div>
+      <div class="floor"></div>
+    </div>
+    <div id="e5-meter" class="abs">Consumo: <b id="e5-meter-val">412</b> kWh</div>
+
+    <!-- Familia (persiste en toda la escena) -->
+    <svg id="e5-family" class="abs" viewBox="0 0 600 300">
+      <g id="e5-dad">
+        <circle cx="140" cy="70" r="52" fill="#f2c9a0" />
+        <path d="M140 18 a52 52 0 0 1 52 46 h-104 a52 52 0 0 1 52 -46z" fill="#3b2a20" />
+        <rect x="72" y="130" width="136" height="170" rx="60" fill="#4361ee" />
+      </g>
+      <g id="e5-kid">
+        <circle cx="300" cy="150" r="40" fill="#e0ac7e" />
+        <path d="M300 110 a40 40 0 0 1 40 36 h-80 a40 40 0 0 1 40 -36z" fill="#1d1d1d" />
+        <rect x="250" y="196" width="100" height="104" rx="44" fill="#ffb703" />
+      </g>
+      <g id="e5-mom">
+        <circle cx="460" cy="76" r="50" fill="#d9a27a" />
+        <path d="M405 80 a55 60 0 0 1 110 0 v70 h-18 v-64 a37 40 0 0 0 -74 0 v64 h-18z" fill="#5a2d1a" />
+        <rect x="394" y="134" width="132" height="166" rx="58" fill="#2ec4b6" />
+      </g>
+    </svg>
+  </div>
+
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+
+      // Entrada (0–1 s)
+      tl.fromTo("#e5-pill", { xPercent: -50, y: -80, autoAlpha: 0 }, { xPercent: -50, y: 0, autoAlpha: 1, duration: 0.5, ease: "back.out(2)" }, 0);
+      tl.fromTo("#e5-family", { y: 160, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6, ease: "power3.out" }, 0.1);
+      tl.fromTo("#e5-receipt", { y: 120, rotation: -6, autoAlpha: 0 }, { y: 0, rotation: 0, autoAlpha: 1, duration: 0.7, ease: "power3.out" }, 0.2);
+
+      // La familia revisa el recibo: se inclinan hacia él
+      tl.fromTo("#e5-dad", { rotation: 0 }, { rotation: 6, svgOrigin: "140 300", duration: 0.5, yoyo: true, repeat: 3, ease: "sine.inOut" }, 0.8);
+      tl.fromTo("#e5-mom", { rotation: 0 }, { rotation: -6, svgOrigin: "460 300", duration: 0.5, yoyo: true, repeat: 3, ease: "sine.inOut" }, 0.9);
+      tl.fromTo("#e5-kid", { y: 0 }, { y: -18, duration: 0.25, yoyo: true, repeat: 7, ease: "sine.inOut" }, 0.8);
+
+      // Lupa sobre los kWh consumidos
+      tl.fromTo("#e5-lens", { x: -320, y: -160, autoAlpha: 0 }, { x: 0, y: 0, autoAlpha: 1, duration: 0.8, ease: "power2.out" }, 1.0);
+      tl.fromTo("#e5-kwh", { scale: 1 }, { scale: 1.08, duration: 0.3, yoyo: true, repeat: 3, ease: "sine.inOut" }, 1.8);
+
+      // Paso 2: comparar (3.0–5.6 s)
+      tl.fromTo(["#e5-receipt", "#e5-lens"], { x: 0 }, { x: -900, autoAlpha: 0, duration: 0.5, ease: "power2.in", immediateRender: false }, 2.9);
+      tl.fromTo("#e5-compare", { x: 900, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.5, ease: "power2.out" }, 3.1);
+      tl.fromTo("#e5-bar-prev", { scaleY: 0, transformOrigin: "50% 100%" }, { scaleY: 1, duration: 0.6, ease: "power2.out" }, 3.5);
+      tl.fromTo("#e5-bar-now", { scaleY: 0, transformOrigin: "50% 100%" }, { scaleY: 1, duration: 0.7, ease: "power2.out" }, 3.9);
+      tl.fromTo(["#e5-num-prev", "#e5-num-now"], { y: 20, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.4, duration: 0.3 }, 3.8);
+      tl.fromTo("#e5-delta", { scale: 0, rotation: -6, autoAlpha: 0 }, { scale: 1, rotation: -6, autoAlpha: 1, duration: 0.4, ease: "back.out(3)" }, 4.6);
+
+      // Paso 3: desconectar y apagar (5.6–9 s)
+      tl.fromTo("#e5-compare", { x: 0 }, { x: -900, autoAlpha: 0, duration: 0.5, ease: "power2.in", immediateRender: false }, 5.5);
+      tl.fromTo("#e5-house", { x: 900, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.5, ease: "power2.out" }, 5.7);
+      tl.fromTo("#e5-meter", { y: 40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4 }, 6.0);
+
+      // Desconectar aparatos de alto consumo
+      [["#e5-plug-2", "#e5-app-mw"], ["#e5-plug-3", "#e5-app-heat"], ["#e5-plug-1", "#e5-app-tv"]].forEach(([plug, app], i) => {
+        const t = 6.3 + i * 0.45;
+        tl.fromTo(plug, { y: 0, rotation: 0 }, { y: -60, rotation: i % 2 ? 18 : -18, duration: 0.3, ease: "power2.out" }, t);
+        tl.fromTo(app + " .live", { opacity: 1, filter: "grayscale(0)" }, { opacity: 0.12, filter: "grayscale(1)", duration: 0.3 }, t + 0.1);
+      });
+
+      // Apagar luces una por una
+      ["#e5-bulb-1", "#e5-bulb-2", "#e5-bulb-3"].forEach((b, i) => {
+        const t = 7.5 + i * 0.3;
+        tl.fromTo(b + " .glow", { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.2 }, t);
+        tl.fromTo(b + " .glass", { attr: { fill: "#ffd25a" } }, { attr: { fill: "#3a4566" }, duration: 0.2 }, t);
+      });
+
+      // El contador de consumo baja
+      const meter = { v: 412 };
+      const meterEl = document.getElementById("e5-meter-val");
+      tl.fromTo(meter, { v: 412 }, {
+        v: 298, duration: 2.4, ease: "power1.inOut",
+        onUpdate: () => { meterEl.textContent = Math.round(meter.v); }
+      }, 6.3);
+      tl.fromTo("#e5-meter", { scale: 1 }, { scale: 1.1, duration: 0.25, yoyo: true, repeat: 1 }, 8.4);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["escena-5"] = tl;
+    })();
+  </script>
+</template>
