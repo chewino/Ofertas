@@ -1,0 +1,76 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; color: #fff; font-family: "Montserrat", sans-serif; }
+    #root .abs { position: absolute; }
+
+    #e6-logo { left: 0; right: 0; top: 120px; margin: 0 auto; width: max-content; display: flex; align-items: center; gap: 22px; }
+    #e6-mark { width: 110px; height: 110px; border-radius: 50%; background: #ffb703;
+               display: grid; place-items: center; box-shadow: 0 0 0 8px rgba(255,183,3,.25); }
+    #e6-logo .word { font-size: 64px; font-weight: 900; letter-spacing: 1px; }
+    #e6-logo .word span { color: #ffb703; }
+
+    #e6-question { left: 80px; right: 80px; top: 330px; text-align: center; font-size: 76px; font-weight: 900; line-height: 1.12; }
+    #e6-question span { color: #ffb703; }
+
+    #root .opt {
+      left: 100px; width: 880px; height: 200px; border-radius: 34px;
+      background: #fff; color: #0b1430;
+      display: flex; align-items: center; gap: 40px; padding: 0 50px;
+      box-shadow: 0 14px 0 rgba(0,0,0,.25);
+    }
+    #root .opt .letter { width: 130px; height: 130px; border-radius: 50%; flex: none;
+                         display: grid; place-items: center; font-size: 72px; font-weight: 900; color: #0b1430; }
+    #root .opt .txt { font-size: 66px; font-weight: 900; }
+    #root .opt .txt small { display: block; font-size: 30px; font-weight: 700; color: #5b6488; }
+    #e6-opt-a { top: 650px; }  #e6-opt-a .letter { background: #2ec4b6; }
+    #e6-opt-b { top: 900px; }  #e6-opt-b .letter { background: #fb8500; }
+    #e6-opt-c { top: 1150px; } #e6-opt-c .letter { background: #ef476f; }
+
+    #e6-bubble {
+      left: 0; right: 0; top: 1390px; margin: 0 auto; width: max-content;
+      padding: 28px 44px; border-radius: 40px; background: #ffb703; color: #0b1430;
+      font-size: 50px; font-weight: 900; white-space: nowrap; box-shadow: 0 12px 0 #fb8500;
+    }
+    #e6-bubble::after { content: ""; position: absolute; left: 120px; bottom: -40px;
+                        border: 22px solid transparent; border-top: 26px solid #ffb703; border-left-width: 0; }
+  </style>
+
+  <div id="root" data-composition-id="escena-6" data-width="1080" data-height="1920">
+    <div id="e6-logo" class="abs">
+      <div id="e6-mark">
+        <svg viewBox="0 0 60 60" width="64" height="64"><path d="M34 4 L12 34 h16 l-4 22 L48 24 H32z" fill="#0b1430" /></svg>
+      </div>
+      <div class="word">Contepe<span>quense</span></div>
+    </div>
+    <div id="e6-question" class="abs">¿Cuánto te llegó de luz <span>este bimestre?</span></div>
+    <div id="e6-opt-a" class="abs opt"><div class="letter">A</div><div class="txt"><small>Menos de</small>$300</div></div>
+    <div id="e6-opt-b" class="abs opt"><div class="letter">B</div><div class="txt"><small>Entre</small>$300 y $800</div></div>
+    <div id="e6-opt-c" class="abs opt"><div class="letter">C</div><div class="txt"><small>Más de</small>$800</div></div>
+    <div id="e6-bubble" class="abs">¡Te leemos en los comentarios!</div>
+  </div>
+
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+
+      // Tiempos locales: 0 s = 54 s del video completo
+      tl.fromTo("#e6-logo", { y: -120, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6, ease: "back.out(2)" }, 0);
+      tl.fromTo("#e6-question", { scale: 0.8, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.6, ease: "back.out(2)" }, 0.4);
+      ["#e6-opt-a", "#e6-opt-b", "#e6-opt-c"].forEach((o, i) => {
+        tl.fromTo(o, { x: i % 2 ? 1100 : -1100 }, { x: 0, duration: 0.55, ease: "power3.out" }, 1.4 + i * 0.25);
+      });
+
+      // Resaltar cada opción cuando el narrador la menciona
+      [["#e6-opt-a", 3.0], ["#e6-opt-b", 3.4], ["#e6-opt-c", 3.8]].forEach(([o, t]) => {
+        tl.fromTo(o, { scale: 1 }, { scale: 1.06, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }, t);
+      });
+
+      tl.fromTo("#e6-bubble", { scale: 0, rotation: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.5, ease: "back.out(2.5)" }, 3.85);
+      tl.fromTo("#e6-bubble", { rotation: 0 }, { rotation: 2, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut", immediateRender: false }, 4.6);
+      tl.fromTo("#e6-mark", { scale: 1 }, { scale: 1.15, duration: 0.3, yoyo: true, repeat: 1 }, 4.2);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["escena-6"] = tl;
+    })();
+  </script>
+</template>
