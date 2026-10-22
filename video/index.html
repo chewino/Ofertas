@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=1080, height=1920" />
+  <title>Recibo de luz — Video completo</title>
+  <script src="escenas-5-6/vendor/gsap.min.js"></script>
+  <style>
+    html, body { margin: 0; padding: 0; width: 1080px; height: 1920px; overflow: hidden; background: #0f1b3d; }
+    #main { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: "Montserrat", sans-serif; }
+    #fondo {
+      position: absolute; inset: 0;
+      background: radial-gradient(1200px 900px at 50% 30%, #1a2a5c, #0f1b3d 70%);
+    }
+    .capa { position: absolute; inset: 0; }
+  </style>
+</head>
+<body>
+  <!--
+    Video completo del recibo de luz (Contepequense), vertical 1080×1920, 60 s.
+    Monta las escenas de escenas-1-4/ y escenas-5-6/ sin duplicarlas.
+  -->
+  <div id="main" data-composition-id="main" data-start="0" data-duration="60" data-width="1080" data-height="1920">
+    <div id="fondo"></div>
+
+    <div id="escena-1" class="capa"
+      data-composition-id="escena-1" data-composition-src="escenas-1-4/compositions/escena-1.html"
+      data-start="0" data-duration="8" data-track-index="1" data-track-kind="graphics"
+      data-width="1080" data-height="1920"></div>
+
+    <div id="escena-2" class="capa"
+      data-composition-id="escena-2" data-composition-src="escenas-1-4/compositions/escena-2.html"
+      data-start="8" data-duration="12" data-track-index="1" data-track-kind="graphics"
+      data-width="1080" data-height="1920"></div>
+
+    <div id="escena-3" class="capa"
+      data-composition-id="escena-3" data-composition-src="escenas-1-4/compositions/escena-3.html"
+      data-start="20" data-duration="13" data-track-index="1" data-track-kind="graphics"
+      data-width="1080" data-height="1920"></div>
+
+    <div id="escena-4" class="capa"
+      data-composition-id="escena-4" data-composition-src="escenas-1-4/compositions/escena-4.html"
+      data-start="33" data-duration="12" data-track-index="1" data-track-kind="graphics"
+      data-width="1080" data-height="1920"></div>
+
+    <div id="escena-5" class="capa"
+      data-composition-id="escena-5" data-composition-src="escenas-5-6/compositions/escena-5.html"
+      data-start="45" data-duration="9" data-track-index="1" data-track-kind="graphics"
+      data-width="1080" data-height="1920"></div>
+
+    <div id="escena-6" class="capa"
+      data-composition-id="escena-6" data-composition-src="escenas-5-6/compositions/escena-6.html"
+      data-start="54" data-duration="6" data-track-index="1" data-track-kind="graphics"
+      data-width="1080" data-height="1920"></div>
+
+    <div id="subtitulos-1-4" class="capa"
+      data-composition-id="subtitulos-1-4" data-composition-src="escenas-1-4/compositions/subtitulos-1-4.html"
+      data-start="0" data-duration="45" data-track-index="2" data-track-kind="captions"
+      data-width="1080" data-height="1920"></div>
+
+    <div id="subtitulos" class="capa"
+      data-composition-id="subtitulos" data-composition-src="escenas-5-6/compositions/subtitulos.html"
+      data-start="45" data-duration="15" data-track-index="2" data-track-kind="captions"
+      data-width="1080" data-height="1920"></div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+    </script>
+  </div>
+</body>
+</html>

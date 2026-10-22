@@ -1,0 +1,41 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; font-family: "Montserrat", sans-serif; }
+    #root .cap {
+      position: absolute; left: 70px; right: 70px; top: 1560px;
+      color: #fff; text-align: center; font-size: 54px; font-weight: 800; line-height: 1.22;
+      text-shadow: 0 4px 0 rgba(0,0,0,.55), 0 0 24px rgba(0,0,0,.45);
+    }
+    #root .cap > span { display: inline-block; }
+    #root .cap em { font-style: normal; color: #ffb703; }
+  </style>
+
+  <!-- Texto del narrador, escenas 1 a 4 (0–45 s) -->
+  <div id="root" data-composition-id="subtitulos-1-4" data-width="1080" data-height="1920">
+    <div id="s14-cap-1" class="clip cap" data-start="0" data-duration="3.6" data-track-index="0"><span>¿Te llegó el recibo de luz y sentiste que te cayó un <em>rayo</em>?</span></div>
+    <div id="s14-cap-2" class="clip cap" data-start="3.6" data-duration="4.4" data-track-index="0"><span>Tranquilo, te explico cómo leerlo en <em>menos de un minuto</em>.</span></div>
+    <div id="s14-cap-3" class="clip cap" data-start="8" data-duration="1.8" data-track-index="0"><span>Primero ubica <em>tres datos</em>:</span></div>
+    <div id="s14-cap-4" class="clip cap" data-start="9.8" data-duration="3.6" data-track-index="0"><span>el <em>periodo</em>, que en casa normalmente es de dos meses;</span></div>
+    <div id="s14-cap-5" class="clip cap" data-start="13.4" data-duration="4" data-track-index="0"><span>las <em>lecturas del medidor</em>, la actual y la anterior;</span></div>
+    <div id="s14-cap-6" class="clip cap" data-start="17.4" data-duration="2.6" data-track-index="0"><span>y el <em>total a pagar</em>.</span></div>
+    <div id="s14-cap-7" class="clip cap" data-start="20" data-duration="3.4" data-track-index="0"><span>La resta de esas lecturas son tus <em>kilowatts</em>.</span></div>
+    <div id="s14-cap-8" class="clip cap" data-start="23.4" data-duration="3" data-track-index="0"><span>Y ojo: se cobran por <em>escalones</em>.</span></div>
+    <div id="s14-cap-9" class="clip cap" data-start="26.4" data-duration="2.6" data-track-index="0"><span>Los primeros salen baratos,</span></div>
+    <div id="s14-cap-10" class="clip cap" data-start="29" data-duration="4" data-track-index="0"><span>pero los de <em>consumo excedente</em> cuestan varias veces más.</span></div>
+    <div id="s14-cap-11" class="clip cap" data-start="33" data-duration="5.2" data-track-index="0"><span>Y si tu <em>promedio de los últimos doce meses</em> rebasa el límite de tu tarifa,</span></div>
+    <div id="s14-cap-12" class="clip cap" data-start="38.2" data-duration="3.2" data-track-index="0"><span>pasas a la <em>tarifa DAC</em>, sin subsidio.</span></div>
+    <div id="s14-cap-13" class="clip cap" data-start="41.4" data-duration="3.6" data-track-index="0"><span>Ahí el recibo puede subir <em>muchísimo</em>.</span></div>
+  </div>
+
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      // Pequeño "pop" de entrada en cada subtítulo
+      [0, 3.6, 8, 9.8, 13.4, 17.4, 20, 23.4, 26.4, 29, 33, 38.2, 41.4].forEach((t, i) => {
+        tl.fromTo("#s14-cap-" + (i + 1) + " > span", { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.2, ease: "power2.out" }, t);
+      });
+      window.__timelines = window.__timelines || {};
+      window.__timelines["subtitulos-1-4"] = tl;
+    })();
+  </script>
+</template>

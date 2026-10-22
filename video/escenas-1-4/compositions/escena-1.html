@@ -1,0 +1,148 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; color: #fff; font-family: "Montserrat", sans-serif; }
+    #root, #root * { box-sizing: border-box; }
+    #root .abs { position: absolute; }
+
+    /* Logotipo (visible desde el primer frame: es la miniatura del video) */
+    #e1-logo { left: 0; right: 0; top: 110px; margin: 0 auto; width: max-content; display: flex; align-items: center; gap: 18px; }
+    #e1-mark { width: 84px; height: 84px; border-radius: 50%; background: #ffb703;
+               display: grid; place-items: center; box-shadow: 0 0 0 7px rgba(255,183,3,.25); }
+    #e1-logo .word { font-size: 50px; font-weight: 900; letter-spacing: 1px; }
+    #e1-logo .word span { color: #ffb703; }
+
+    /* Puerta */
+    #e1-door-wrap { left: 260px; top: 330px; width: 560px; height: 960px; }
+    #e1-frame { left: 0; top: 0; width: 560px; height: 940px; background: #2c3a6d; border-radius: 20px 20px 0 0; }
+    #e1-door { left: 30px; top: 30px; width: 500px; height: 900px; background: #8a5a3c; border-radius: 12px 12px 0 0; }
+    #e1-door .panel { position: absolute; left: 60px; right: 60px; border: 8px solid #6e4429; border-radius: 12px; }
+    #e1-door .p1 { top: 60px; height: 330px; }
+    #e1-door .p2 { top: 450px; height: 380px; }
+    #e1-door .knob { position: absolute; right: 50px; top: 470px; width: 44px; height: 44px; border-radius: 50%; background: #ffb703; }
+    #e1-floor { left: -180px; top: 940px; width: 920px; height: 10px; border-radius: 5px; background: #55608a; }
+
+    /* Sobre */
+    #e1-env { left: 390px; top: 1160px; width: 300px; height: 180px; }
+
+    /* Recibo con el total */
+    #e1-bill {
+      left: 160px; top: 400px; width: 760px; height: 640px;
+      background: #fdfcf7; color: #0b1430; border-radius: 30px; padding: 50px 56px;
+      box-shadow: 0 30px 60px rgba(0,0,0,.4);
+    }
+    #e1-bill .b-title { font-size: 54px; font-weight: 900; letter-spacing: 2px; }
+    #e1-bill .b-sub { font-size: 36px; font-weight: 600; color: #5b6488; margin-top: 6px; }
+    #e1-bill .b-lbl { margin-top: 70px; font-size: 42px; font-weight: 800; }
+    #e1-amount { font-size: 170px; font-weight: 900; color: #c81d45; line-height: 1.05; transform-origin: left center; }
+    #e1-bill .b-due { margin-top: 20px; font-size: 36px; font-weight: 700; color: #5b6488; }
+
+    #e1-bolt { left: 730px; top: 250px; width: 280px; height: 440px; }
+    #e1-flash { left: 0; top: 0; width: 1080px; height: 1920px; background: #fff; }
+    #e1-face { left: 350px; top: 1110px; width: 380px; height: 400px; }
+
+    #e1-timer {
+      left: 0; right: 0; top: 960px; margin: 0 auto; width: max-content;
+      display: flex; align-items: center; gap: 20px;
+      padding: 16px 38px 16px 22px; border-radius: 999px; background: #2ec4b6; color: #0b1430;
+      font-size: 48px; font-weight: 900; white-space: nowrap; box-shadow: 0 10px 0 #1a8f84;
+    }
+  </style>
+
+  <div id="root" data-composition-id="escena-1" data-width="1080" data-height="1920">
+    <div id="e1-logo" class="abs">
+      <div id="e1-mark">
+        <svg viewBox="0 0 60 60" width="50" height="50"><path d="M34 4 L12 34 h16 l-4 22 L48 24 H32z" fill="#0b1430" /></svg>
+      </div>
+      <div class="word">Contepe<span>quense</span></div>
+    </div>
+
+    <!-- El recibo llega por debajo de la puerta -->
+    <div id="e1-door-wrap" class="abs">
+      <div id="e1-frame" class="abs"></div>
+      <div id="e1-door" class="abs">
+        <div class="panel p1"></div>
+        <div class="panel p2"></div>
+        <div class="knob"></div>
+      </div>
+      <div id="e1-floor" class="abs"></div>
+    </div>
+    <svg id="e1-env" class="abs" viewBox="0 0 300 180">
+      <rect x="4" y="4" width="292" height="172" rx="14" fill="#fdfcf7" stroke="#c9cde0" stroke-width="4" />
+      <path d="M8 10 L150 100 L292 10" fill="none" stroke="#c9cde0" stroke-width="6" />
+      <circle cx="150" cy="120" r="30" fill="#ffb703" />
+      <path d="M155 98 L139 122 h11 l-3 17 L162 115 H151z" fill="#0b1430" />
+    </svg>
+
+    <!-- Lo abre: el total "le cae como rayo" -->
+    <div id="e1-bill" class="abs">
+      <div class="b-title">RECIBO DE LUZ</div>
+      <div class="b-sub">Servicio doméstico · bimestral</div>
+      <div class="b-lbl">Total a pagar</div>
+      <div id="e1-amount">$1,027</div>
+      <div class="b-due">Fecha límite de pago: 26 AGO</div>
+    </div>
+    <svg id="e1-bolt" class="abs" viewBox="0 0 280 440">
+      <path d="M170 0 L20 250 h100 l-40 190 L260 160 H150z" fill="#ffb703" stroke="#0b1430" stroke-width="10" stroke-linejoin="round" />
+    </svg>
+
+    <!-- Cara: susto y luego alivio -->
+    <svg id="e1-face" class="abs" viewBox="0 0 380 400">
+      <circle cx="190" cy="210" r="160" fill="#f2c9a0" />
+      <path d="M30 190 a160 160 0 0 1 320 0 c-40 -60 -100 -70 -160 -70 s-120 10 -160 70z" fill="#3b2a20" />
+      <g id="e1-brows">
+        <rect x="100" y="140" width="70" height="14" rx="7" fill="#3b2a20" />
+        <rect x="210" y="140" width="70" height="14" rx="7" fill="#3b2a20" />
+      </g>
+      <circle cx="135" cy="200" r="18" fill="#0b1430" />
+      <circle cx="245" cy="200" r="18" fill="#0b1430" />
+      <ellipse id="e1-mouth-o" cx="190" cy="295" rx="34" ry="44" fill="#5a1f1f" />
+      <path id="e1-mouth-smile" d="M125 275 Q190 345 255 275" fill="none" stroke="#5a1f1f" stroke-width="16" stroke-linecap="round" />
+    </svg>
+
+    <div id="e1-timer" class="abs">
+      <svg viewBox="0 0 80 80" width="76" height="76">
+        <circle cx="40" cy="44" r="30" fill="#fff" stroke="#0b1430" stroke-width="6" />
+        <rect x="33" y="2" width="14" height="10" rx="3" fill="#0b1430" />
+        <circle id="e1-ring" cx="40" cy="44" r="22" fill="none" stroke="#ef476f" stroke-width="12"
+                stroke-dasharray="138.2" stroke-dashoffset="138.2" transform="rotate(-90 40 44)" />
+      </svg>
+      ¡En menos de 1 minuto!
+    </div>
+
+    <div id="e1-flash" class="abs"></div>
+  </div>
+
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+
+      // 0–1.3 s · El recibo se desliza por debajo de la puerta
+      tl.fromTo("#e1-env", { y: -90, scaleY: 0.2, autoAlpha: 0 }, { y: 0, scaleY: 1, autoAlpha: 1, duration: 0.7, ease: "power3.out" }, 0.2);
+      tl.fromTo("#e1-door-wrap", { scale: 1, autoAlpha: 1 }, { scale: 0.92, autoAlpha: 0, duration: 0.4, ease: "power2.in" }, 1.3);
+      tl.fromTo("#e1-env", { y: 0, scale: 1 }, { y: -500, scale: 0.5, autoAlpha: 0, duration: 0.4, ease: "power2.in", immediateRender: false }, 1.35);
+
+      // 1.5–3.6 s · Lo abre y el total le cae como rayo
+      tl.fromTo("#e1-bill", { scale: 0.3, rotation: -8, autoAlpha: 0 }, { scale: 1, rotation: 0, autoAlpha: 1, duration: 0.5, ease: "back.out(1.8)" }, 1.5);
+      tl.fromTo("#e1-flash", { opacity: 0 }, { opacity: 0.85, duration: 0.08 }, 2.0);
+      tl.fromTo("#e1-flash", { opacity: 0.85 }, { opacity: 0, duration: 0.35, immediateRender: false }, 2.08);
+      tl.fromTo("#e1-bolt", { scale: 0, rotation: -20, autoAlpha: 0 }, { scale: 1, rotation: 0, autoAlpha: 1, duration: 0.3, ease: "back.out(3)" }, 2.0);
+      tl.fromTo("#e1-bill", { x: 0 }, { x: 18, duration: 0.06, repeat: 9, yoyo: true, ease: "none", immediateRender: false }, 2.0);
+      tl.fromTo("#e1-face", { y: 320, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5, ease: "back.out(1.6)" }, 2.2);
+      tl.fromTo("#e1-amount", { scale: 1 }, { scale: 1.12, duration: 0.2, yoyo: true, repeat: 1 }, 2.5);
+
+      // 3.6–8 s · "Tranquilo": se calma y aparece el cronómetro
+      tl.fromTo("#e1-bolt", { scale: 1 }, { scale: 0.6, autoAlpha: 0, duration: 0.3, immediateRender: false }, 3.6);
+      tl.fromTo("#e1-bill", { y: 0, scale: 1 }, { y: -60, scale: 0.8, duration: 0.5, ease: "power2.inOut", immediateRender: false }, 3.6);
+      tl.fromTo("#e1-mouth-o", { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.2 }, 3.7);
+      tl.fromTo("#e1-mouth-smile", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.2 }, 3.75);
+      tl.fromTo("#e1-brows", { y: -22 }, { y: 0, duration: 0.3 }, 3.7);
+      tl.fromTo("#e1-timer", { scale: 0.5, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.4, ease: "back.out(2.2)" }, 4.3);
+      tl.fromTo("#e1-ring", { strokeDashoffset: 138.2 }, { strokeDashoffset: 0, duration: 3.3, ease: "none" }, 4.6);
+      tl.fromTo("#e1-mark", { scale: 1 }, { scale: 1.15, duration: 0.3, yoyo: true, repeat: 1 }, 6.2);
+      tl.fromTo("#e1-face", { rotation: 0 }, { rotation: 4, duration: 0.3, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, 6.6);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["escena-1"] = tl;
+    })();
+  </script>
+</template>
