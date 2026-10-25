@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=1080, height=1920" />
+  <title>Noche de toritos — Vista desde el dron</title>
+  <script src="vendor/gsap.min.js"></script>
+  <style>
+    html, body { margin: 0; padding: 0; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+    #main { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: "Montserrat", sans-serif; }
+    .capa { position: absolute; inset: 0; }
+  </style>
+</head>
+<body>
+  <!--
+    Reel vertical 1080×1920 (31 s) con 12 fotos aéreas de la quema de toritos y fuegos artificiales.
+      fotos   0–31 s  Paneo lento (Ken Burns) con fundidos de 0.5 s entre fotos
+      textos  0–31 s  Título de entrada, rótulos intermedios y cierre con llamado a comentar
+  -->
+  <div id="main" data-composition-id="main" data-start="0" data-duration="31" data-width="1080" data-height="1920">
+    <div id="fotos" class="capa"
+      data-composition-id="fotos" data-composition-src="compositions/fotos.html"
+      data-start="0" data-duration="31" data-track-index="1" data-track-kind="graphics"
+      data-width="1080" data-height="1920"></div>
+
+    <div id="textos" class="capa"
+      data-composition-id="textos" data-composition-src="compositions/textos.html"
+      data-start="0" data-duration="31" data-track-index="2" data-track-kind="graphics"
+      data-width="1080" data-height="1920"></div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+    </script>
+  </div>
+</body>
+</html>

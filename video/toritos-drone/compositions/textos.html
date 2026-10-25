@@ -1,0 +1,77 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; color: #fff; font-family: "Montserrat", sans-serif; }
+    #root .abs { position: absolute; }
+    #root .sombra { text-shadow: 0 6px 0 rgba(0,0,0,.6), 0 0 18px rgba(0,0,0,.9), 0 0 40px rgba(0,0,0,.7); }
+
+    #t-logo { left: 0; right: 0; top: 140px; margin: 0 auto; width: max-content; display: flex; align-items: center; gap: 18px; }
+    #t-mark { width: 84px; height: 84px; border-radius: 50%; background: #ffb703;
+              display: grid; place-items: center; box-shadow: 0 0 0 7px rgba(255,183,3,.25); }
+    #t-logo .word { font-size: 50px; font-weight: 900; letter-spacing: 1px; }
+    #t-logo .word span { color: #ffb703; }
+
+    #t-titulo { left: 60px; right: 60px; top: 1330px; text-align: center; font-size: 118px; font-weight: 900; line-height: 1;
+                padding: 30px 0; border-radius: 44px; background: rgba(0,0,0,.5); }
+    #t-titulo span { color: #ffb703; display: block; }
+    #t-sub { left: 0; right: 0; top: 1600px; margin: 0 auto; width: max-content;
+             padding: 16px 38px; border-radius: 999px; background: rgba(0,0,0,.55); border: 3px solid #ffb703;
+             font-size: 40px; font-weight: 800; letter-spacing: 3px; }
+
+    #root .rotulo { left: 0; right: 0; top: 1500px; text-align: center; font-size: 72px; font-weight: 900; line-height: 1.1; opacity: 0; }
+    #root .rotulo em { font-style: normal; color: #ffb703; }
+
+    #t-final { left: 70px; right: 70px; top: 1240px; text-align: center; font-size: 84px; font-weight: 900; line-height: 1.08; opacity: 0; }
+    #t-final span { color: #ffb703; }
+    #t-bubble {
+      left: 0; right: 0; top: 1520px; margin: 0 auto; width: max-content;
+      padding: 28px 44px; border-radius: 40px; background: #ffb703; color: #0b1430;
+      font-size: 48px; font-weight: 900; white-space: nowrap; box-shadow: 0 12px 0 #fb8500; opacity: 0;
+    }
+  </style>
+
+  <div id="root" data-composition-id="textos" data-width="1080" data-height="1920">
+    <div id="t-logo" class="abs sombra">
+      <div id="t-mark">
+        <svg viewBox="0 0 60 60" width="50" height="50"><path d="M34 4 L12 34 h16 l-4 22 L48 24 H32z" fill="#0b1430" /></svg>
+      </div>
+      <div class="word">Contepe<span>quense</span></div>
+    </div>
+
+    <div id="t-titulo" class="abs sombra">¡Noche de <span>toritos!</span></div>
+    <div id="t-sub" class="abs">VISTA DESDE EL DRON</div>
+
+    <div id="r-1" class="abs rotulo sombra">La plaza, <em>llena</em></div>
+    <div id="r-2" class="abs rotulo sombra">¡Lluvia de <em>chispas</em>!</div>
+    <div id="r-3" class="abs rotulo sombra">El cielo se <em>ilumina</em></div>
+
+    <div id="t-final" class="abs sombra">¿Tú también <span>estuviste ahí?</span></div>
+    <div id="t-bubble" class="abs">¡Cuéntanos en los comentarios!</div>
+  </div>
+
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+
+      // Entrada (fotos 1–2)
+      // Título visible desde el cuadro 0 (es la miniatura en redes) con un leve "respiro"
+      tl.fromTo("#t-titulo", { scale: 1 }, { scale: 1.06, duration: 0.6, yoyo: true, repeat: 1, ease: "sine.inOut" }, 0.4);
+      tl.to("#t-mark", { scale: 1.15, duration: 0.3, yoyo: true, repeat: 1 }, 0.8);
+      tl.to(["#t-titulo", "#t-sub"], { autoAlpha: 0, y: 40, duration: 0.4, ease: "power2.in" }, 4.2);
+
+      // Rótulos intermedios: foto 3 (plaza), fotos 4–6 (toritos verdes), fotos 9–10 (fuegos sobre la iglesia)
+      [["#r-1", 5.2], ["#r-2", 8.0], ["#r-3", 20.3]].forEach(([r, t]) => {
+        tl.fromTo(r, { y: 50, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4, ease: "power3.out" }, t);
+        tl.to(r, { y: -30, autoAlpha: 0, duration: 0.35, ease: "power2.in" }, t + 2.1);
+      });
+
+      // Cierre (última foto)
+      tl.fromTo("#t-final", { scale: 0.8, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.6, ease: "back.out(2)" }, 27.6);
+      tl.fromTo("#t-bubble", { scale: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.5, ease: "back.out(2.5)" }, 28.3);
+      tl.fromTo("#t-bubble", { rotation: 0 }, { rotation: 2, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut", immediateRender: false }, 29.2);
+      tl.to("#t-mark", { scale: 1.15, duration: 0.3, yoyo: true, repeat: 1 }, 29.6);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["textos"] = tl;
+    })();
+  </script>
+</template>

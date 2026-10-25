@@ -1,0 +1,54 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; background: #000; }
+    /* Las fotos son 16:9; a 1920 px de alto miden 3413 px de ancho y se recorren en paneo horizontal */
+    #root img { position: absolute; top: 0; left: 0; height: 1920px; width: 3413px; opacity: 0; will-change: transform, opacity; }
+    #root .vigneta {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 72%, rgba(0,0,0,.6) 100%),
+        radial-gradient(130% 80% at 50% 50%, rgba(0,0,0,0) 60%, rgba(0,0,0,.35) 100%);
+    }
+  </style>
+
+  <div id="root" data-composition-id="fotos" data-width="1080" data-height="1920">
+    <img id="f01" data-layout-allow-overflow src="fotos/01.jpg" alt="" />
+    <img id="f02" data-layout-allow-overflow src="fotos/02.jpg" alt="" />
+    <img id="f03" data-layout-allow-overflow src="fotos/03.jpg" alt="" />
+    <img id="f04" data-layout-allow-overflow src="fotos/04.jpg" alt="" />
+    <img id="f05" data-layout-allow-overflow src="fotos/05.jpg" alt="" />
+    <img id="f06" data-layout-allow-overflow src="fotos/06.jpg" alt="" />
+    <img id="f07" data-layout-allow-overflow src="fotos/07.jpg" alt="" />
+    <img id="f08" data-layout-allow-overflow src="fotos/08.jpg" alt="" />
+    <img id="f09" data-layout-allow-overflow src="fotos/09.jpg" alt="" />
+    <img id="f10" data-layout-allow-overflow src="fotos/10.jpg" alt="" />
+    <img id="f11" data-layout-allow-overflow src="fotos/11.jpg" alt="" />
+    <img id="f12" data-layout-allow-overflow src="fotos/12.jpg" alt="" />
+    <div class="vigneta"></div>
+  </div>
+
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const SLOT = 2.5, FADE = 0.5, ANCHO = 3413, VISTA = 1080;
+      // Centro horizontal (0–1) de la acción en cada foto y dirección del paneo
+      const focos = [0.45, 0.42, 0.40, 0.42, 0.45, 0.45, 0.47, 0.50, 0.48, 0.47, 0.47, 0.48];
+
+      focos.forEach((foco, i) => {
+        const id = "#f" + String(i + 1).padStart(2, "0");
+        const inicio = i * SLOT;
+        const ultima = i === focos.length - 1;
+        const dur = ultima ? 31 - inicio : SLOT + FADE;
+        const centro = Math.min(0, Math.max(VISTA - ANCHO, VISTA / 2 - foco * ANCHO));
+        const dir = i % 2 ? 1 : -1;
+
+        tl.set(id, { x: centro - dir * 220, scale: 1, transformOrigin: (foco * 100) + "% 50%" }, 0);
+        tl.to(id, { x: centro + dir * 220, scale: 1.07, duration: dur, ease: "none" }, inicio);
+        tl.fromTo(id, { opacity: 0 }, { opacity: 1, duration: i === 0 ? 0.01 : FADE, ease: "power1.inOut" }, inicio);
+      });
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["fotos"] = tl;
+    })();
+  </script>
+</template>
