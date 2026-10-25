@@ -1,0 +1,96 @@
+<template>
+  <style>
+    @font-face { font-family: "Cinzel"; font-weight: 400; src: url(fuentes/cinzel-latin-400-normal.woff2) format("woff2"); }
+    @font-face { font-family: "Cinzel"; font-weight: 700; src: url(fuentes/cinzel-latin-700-normal.woff2) format("woff2"); }
+    @font-face { font-family: "Cormorant"; font-weight: 400; src: url(fuentes/cormorant-garamond-latin-400-normal.woff2) format("woff2"); }
+    @font-face { font-family: "Cormorant"; font-weight: 600; src: url(fuentes/cormorant-garamond-latin-600-normal.woff2) format("woff2"); }
+
+    #root { position: absolute; inset: 0; color: #f4ead8; }
+    #root .abs { position: absolute; left: 0; right: 0; text-align: center; visibility: hidden; }
+    #root .sombra { text-shadow: 0 2px 4px rgba(0,0,0,.8), 0 0 30px rgba(0,0,0,.7); }
+
+    #presenta { top: 500px; font-family: "Cinzel", serif; font-weight: 400; font-size: 34px; letter-spacing: 22px; visibility: visible; }
+    /* Frases dentro de la barra inferior, como subtítulos de cine */
+    #root .frase { top: 968px; font-family: "Cormorant", serif; font-weight: 600; font-size: 50px; letter-spacing: 1px; }
+
+    #root .palabra { top: 420px; font-family: "Cinzel", serif; font-weight: 700; font-size: 150px; letter-spacing: 34px; color: #f6d38a; }
+
+    #titulo { top: 360px; font-family: "Cinzel", serif; font-weight: 700; font-size: 230px; letter-spacing: 40px; line-height: 1;
+              color: #f6d38a; text-shadow: 0 0 40px rgba(255,170,60,.55), 0 4px 10px rgba(0,0,0,.8); }
+    #linea { top: 630px; margin: 0 auto; width: 520px; height: 2px; background: linear-gradient(90deg, rgba(246,211,138,0), #f6d38a, rgba(246,211,138,0)); }
+    #subtitulo { top: 660px; font-family: "Cinzel", serif; font-weight: 700; font-size: 38px; letter-spacing: 18px; }
+
+    #marca { top: 380px; font-family: "Cinzel", serif; font-weight: 700; font-size: 72px; letter-spacing: 14px; color: #f6d38a; }
+    #pregunta { top: 520px; font-family: "Cormorant", serif; font-weight: 600; font-size: 72px; }
+    #comenta { top: 625px; font-family: "Cormorant", serif; font-weight: 400; font-size: 44px; letter-spacing: 2px; opacity: .9; }
+  </style>
+
+  <div id="root" data-composition-id="textos" data-width="1920" data-height="1080">
+    <div id="presenta" class="abs sombra">CONTEPEQUENSE PRESENTA</div>
+    <div id="frase-1" class="abs frase sombra">Cuando cae la noche, el pueblo se reúne en la plaza.</div>
+    <div id="frase-2" class="abs frase sombra">Y el fuego se vuelve tradición.</div>
+
+    <div id="w-1" class="abs palabra sombra">FE</div>
+    <div id="w-2" class="abs palabra sombra">FUEGO</div>
+    <div id="w-3" class="abs palabra sombra">FIESTA</div>
+
+    <div id="titulo" class="abs">TORITOS</div>
+    <div id="linea" class="abs"></div>
+    <div id="subtitulo" class="abs sombra">UNA NOCHE EN LA PLAZA</div>
+
+    <div id="marca" class="abs sombra">CONTEPEQUENSE</div>
+    <div id="pregunta" class="abs sombra">¿Tú también estuviste ahí?</div>
+    <div id="comenta" class="abs sombra">Cuéntanos en los comentarios.</div>
+  </div>
+
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const BAR = 8 / 3;
+
+      // Aparición lenta: opacidad + leve subida; salida con fundido
+      function texto(sel, t, dur, sube = 14) {
+        tl.set(sel, { autoAlpha: 1 }, t);
+        tl.fromTo(sel, { opacity: 0, y: sube }, { opacity: 1, y: 0, duration: 1.0, ease: "sine.out", immediateRender: false }, t);
+        tl.to(sel, { opacity: 0, duration: 0.8, ease: "sine.in" }, t + dur - 0.8);
+        tl.set(sel, { autoAlpha: 0 }, t + dur);
+      }
+
+      // "Contepequense presenta" está en pantalla desde el cuadro 0
+      tl.fromTo("#presenta", { scale: 1 }, { scale: 1.04, duration: 4.4, ease: "none" }, 0);
+      tl.to("#presenta", { opacity: 0, duration: 0.9, ease: "sine.in" }, 3.6);
+      tl.set("#presenta", { autoAlpha: 0 }, 4.5);
+
+      texto("#frase-1", 2 * BAR + 0.6, 4.2);
+      texto("#frase-2", 5 * BAR + 0.4, 3.8);
+
+      // Clímax: una palabra por compás
+      [["#w-1", 8], ["#w-2", 9], ["#w-3", 10]].forEach(([w, b]) => {
+        const t = b * BAR + 0.15;
+        tl.set(w, { autoAlpha: 1 }, t);
+        tl.fromTo(w, { opacity: 0, scale: 1.12 }, { opacity: 1, scale: 1, duration: 0.5, ease: "power2.out", immediateRender: false }, t);
+        tl.to(w, { scale: 0.97, duration: 1.6, ease: "none" }, t + 0.5);
+        tl.to(w, { opacity: 0, duration: 0.35, ease: "sine.in" }, t + 2.1);
+        tl.set(w, { autoAlpha: 0 }, t + 2.45);
+      });
+
+      // Título
+      const T = 12 * BAR + 0.5;
+      tl.set(["#titulo", "#linea", "#subtitulo"], { autoAlpha: 1 }, T);
+      tl.fromTo("#titulo", { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 1.6, ease: "power2.out", immediateRender: false }, T);
+      tl.to("#titulo", { scale: 0.97, duration: 2.6, ease: "none" }, T + 1.6);
+      tl.fromTo("#linea", { opacity: 0, scaleX: 0 }, { opacity: 1, scaleX: 1, duration: 1.2, ease: "power2.out", immediateRender: false }, T + 0.8);
+      tl.fromTo("#subtitulo", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 1.0, ease: "sine.out", immediateRender: false }, T + 1.3);
+      tl.to(["#titulo", "#linea", "#subtitulo"], { opacity: 0, duration: 0.9, ease: "sine.in" }, T + 3.6);
+      tl.set(["#titulo", "#linea", "#subtitulo"], { autoAlpha: 0 }, T + 4.5);
+
+      // Cierre
+      texto("#marca", 37.6, 4.6, 10);
+      texto("#pregunta", 38.2, 4.0, 10);
+      texto("#comenta", 38.9, 3.3, 10);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["textos"] = tl;
+    })();
+  </script>
+</template>

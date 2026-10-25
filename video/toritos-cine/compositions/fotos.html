@@ -1,0 +1,128 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; background: #000; }
+    #cam { position: absolute; inset: 0; overflow: hidden; }
+    #cam img { position: absolute; top: 0; left: 0; width: 1920px; height: 1080px; visibility: hidden; opacity: 0; }
+    #root .capa { position: absolute; inset: 0; pointer-events: none; }
+    /* Etalonaje "teal & orange": sombras frías, luces cálidas */
+    #teal { background: #0b4f5c; mix-blend-mode: soft-light; opacity: .55; }
+    #calido { background: radial-gradient(55% 60% at 50% 55%, rgba(255,150,60,.22), rgba(255,150,60,0) 70%); mix-blend-mode: screen; }
+    #vigneta { background: radial-gradient(85% 85% at 50% 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,.7) 100%); }
+    #grano { inset: -256px; background: url(fotos/grano.png); background-size: 512px 512px; mix-blend-mode: overlay; opacity: .11; }
+    #flash { background: #fff1d6; opacity: 0; }
+    #oscuro { background: #000; opacity: 0; }
+    #negro { background: #000; opacity: 0; }
+    /* Encuadre de cine 2.39:1 */
+    #root .barra { position: absolute; left: 0; right: 0; height: 138px; background: #000; }
+    #bar-t { top: 0; }
+    #bar-b { bottom: 0; }
+  </style>
+
+  <div id="root" data-composition-id="fotos" data-width="1920" data-height="1080">
+    <div id="cam">
+      <img id="s01" data-layout-allow-overflow src="fotos/p06.jpg" alt="" />
+      <img id="s02" data-layout-allow-overflow src="fotos/p01.jpg" alt="" />
+      <img id="s03" data-layout-allow-overflow src="fotos/p11.jpg" alt="" />
+      <img id="s04" data-layout-allow-overflow src="fotos/p07.jpg" alt="" />
+      <img id="s05" data-layout-allow-overflow src="fotos/p10.jpg" alt="" />
+      <img id="s06" data-layout-allow-overflow src="fotos/p02.jpg" alt="" />
+      <img id="s07" data-layout-allow-overflow src="fotos/p09.jpg" alt="" />
+      <img id="s08" data-layout-allow-overflow src="fotos/p08.jpg" alt="" />
+      <img id="s09" data-layout-allow-overflow src="fotos/p19.jpg" alt="" />
+      <img id="s10" data-layout-allow-overflow src="fotos/p04.jpg" alt="" />
+      <img id="s11" data-layout-allow-overflow src="fotos/p03.jpg" alt="" />
+      <img id="s12" data-layout-allow-overflow src="fotos/p20.jpg" alt="" />
+      <img id="s13" data-layout-allow-overflow src="fotos/p01.jpg" alt="" />
+    </div>
+    <div id="teal" class="capa"></div>
+    <div id="calido" class="capa"></div>
+    <div id="vigneta" class="capa"></div>
+    <div id="grano" class="capa" data-layout-allow-overflow></div>
+    <div id="flash" class="capa"></div>
+    <div id="oscuro" class="capa"></div>
+    <div id="negro" class="capa"></div>
+    <div id="bar-t" class="barra"></div>
+    <div id="bar-b" class="barra"></div>
+  </div>
+
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const W = 1920, H = 1080, BAR = 8 / 3;
+
+      // Encuadre: escala s (1 = la foto llena el cuadro) centrada en (fx, fy), sin dejar bordes
+      function pose(s, fx, fy) {
+        return {
+          x: Math.min(0, Math.max(W - W * s, W / 2 - fx * W * s)),
+          y: Math.min(0, Math.max(H - H * s, H / 2 - fy * H * s)),
+          scale: s,
+        };
+      }
+
+      // [inicio, foco x, foco y, zoom inicial, zoom final, deriva x, fundido de entrada (0 = corte seco), curva]
+      const tomas = [
+        [0,         0.50, 0.55, 1.00, 1.14, 0.00, 0,   "sine.inOut"], // plaza en calma
+        [2 * BAR,   0.45, 0.55, 1.05, 1.20, 0.02, 1.4, "none"],       // la plaza completa
+        [4 * BAR,   0.48, 0.62, 1.10, 1.22, 0.00, 0,   "none"],       // braam: corte seco
+        [5 * BAR,   0.40, 0.45, 1.10, 1.22, 0.02, 0.7, "none"],
+        [6 * BAR,   0.47, 0.45, 1.10, 1.22, -0.02, 0.7, "none"],
+        [7 * BAR,   0.50, 0.50, 1.05, 1.16, 0.03, 0.7, "none"],
+        [8 * BAR,   0.42, 0.50, 1.15, 1.30, 0.00, 0,   "none"],       // clímax: cortes secos
+        [9 * BAR,   0.42, 0.45, 1.15, 1.30, 0.02, 0,   "none"],
+        [10 * BAR,  0.45, 0.35, 1.10, 1.30, 0.00, 0,   "none"],
+        [11 * BAR,  0.45, 0.40, 1.20, 1.35, 0.00, 0,   "none"],
+        [11.5 * BAR, 0.45, 0.35, 1.10, 1.70, 0.00, 0,  "expo.in"],    // rampa hacia el silencio
+        [12 * BAR,  0.47, 0.42, 1.30, 1.10, 0.00, 0,   "sine.out"],   // golpe final: fuegos sobre la iglesia
+        [13.7 * BAR, 0.45, 0.50, 1.18, 1.00, 0.00, 1.6, "sine.inOut"], // la plaza, se abre despacio
+      ];
+      const FIN = 43;
+
+      tomas.forEach(([t0, fx, fy, z0, z1, dx, fade, ease], i) => {
+        const id = "#s" + String(i + 1).padStart(2, "0");
+        const sig = tomas[i + 1];
+        const hasta = sig ? sig[0] + sig[6] : FIN;
+        tl.set(id, { transformOrigin: "0 0", ...pose(z0, fx, fy) }, 0);
+        if (fade) tl.fromTo(id, { autoAlpha: 0 }, { autoAlpha: 1, duration: fade, ease: "sine.inOut", immediateRender: false }, t0);
+        else tl.set(id, { autoAlpha: 1 }, t0);
+        tl.to(id, { ...pose(z1, fx + dx, fy), duration: hasta - t0, ease }, t0);
+        if (sig) tl.set(id, { autoAlpha: 0 }, hasta);
+      });
+
+      tl.set("#cam", { filter: "contrast(1.16) saturate(1.06) brightness(0.97)" }, 0);
+
+      // Apertura desde la penumbra, silencio en negro antes del golpe final y fundido de salida
+      tl.fromTo("#negro", { opacity: 0.65 }, { opacity: 0, duration: 2.6, ease: "sine.out" }, 0);
+      tl.set("#negro", { opacity: 1 }, 12 * BAR - 0.35);
+      tl.set("#negro", { opacity: 0 }, 12 * BAR);
+      tl.to("#negro", { opacity: 1, duration: 1.6, ease: "sine.in" }, FIN - 1.6);
+
+      // Oscurece la imagen detrás del título y del cierre para que el texto se lea
+      tl.to("#oscuro", { opacity: 0.5, duration: 1.2, ease: "sine.inOut" }, 12 * BAR + 0.6);
+      tl.to("#oscuro", { opacity: 0.15, duration: 1.0, ease: "sine.inOut" }, 12 * BAR + 4.2);
+      tl.to("#oscuro", { opacity: 0.6, duration: 1.2, ease: "sine.inOut" }, 37.2);
+
+      // Destellos cálidos: suave en el primer braam, fuerte en el golpe final
+      tl.fromTo("#flash", { opacity: 0.35 }, { opacity: 0, duration: 0.8, ease: "power2.out", immediateRender: false }, 4 * BAR);
+      tl.fromTo("#flash", { opacity: 0.9 }, { opacity: 0, duration: 1.4, ease: "power2.out", immediateRender: false }, 12 * BAR);
+
+      // Temblor contenido en los golpes
+      [[4 * BAR, 8], [8 * BAR, 6], [12 * BAR, 16]].forEach(([t, a]) => {
+        for (let k = 0; k < 8; k++) {
+          const m = a * (1 - k / 8);
+          tl.to("#cam", { x: (k % 2 ? -1 : 1) * m, y: ((k % 3) - 1) * m * 0.6, duration: 0.06, ease: "none" }, t + k * 0.06);
+        }
+        tl.to("#cam", { x: 0, y: 0, duration: 0.08 }, t + 0.48);
+      });
+
+      // Grano de película: cambia de posición 24 veces por segundo
+      let semilla = 7;
+      const azar = () => ((semilla = (semilla * 16807) % 2147483647) / 2147483647);
+      for (let f = 0; f < FIN * 24; f++) {
+        tl.set("#grano", { x: Math.round(azar() * 400 - 200), y: Math.round(azar() * 400 - 200) }, f / 24);
+      }
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["fotos"] = tl;
+    })();
+  </script>
+</template>

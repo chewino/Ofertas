@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=1920, height=1080" />
+  <title>Toritos — Versión cinematográfica</title>
+  <script src="vendor/gsap.min.js"></script>
+  <style>
+    html, body { margin: 0; padding: 0; width: 1920px; height: 1080px; overflow: hidden; background: #000; }
+    #main { position: relative; width: 1920px; height: 1080px; overflow: hidden; }
+    .capa { position: absolute; inset: 0; }
+  </style>
+</head>
+<body>
+  <!--
+    Versión cinematográfica 1920×1080 con encuadre de cine 2.39:1 (43 s), sobre una partitura original a 90 BPM.
+    Un compás = 2.667 s.
+      0–10.7 s  intro: piano, fundidos lentos, "Contepequense presenta" y primera frase
+      10.7–21.3 s  construcción: "braam", cuerdas y tambores; tomas largas con fundidos cortos
+      21.3–32 s  clímax: cortes secos en cada compás, "Fe · Fuego · Fiesta", rampa y silencio
+      32–43 s  golpe final, título "TORITOS" y cierre con llamado a comentar
+  -->
+  <div id="main" data-composition-id="main" data-start="0" data-duration="43" data-width="1920" data-height="1080">
+    <audio id="musica" src="audio/musica.m4a"
+      data-start="0" data-duration="43" data-track-index="0" data-volume="1"></audio>
+
+    <div id="fotos" class="capa"
+      data-composition-id="fotos" data-composition-src="compositions/fotos.html"
+      data-start="0" data-duration="43" data-track-index="1" data-track-kind="graphics"
+      data-width="1920" data-height="1080"></div>
+
+    <div id="textos" class="capa"
+      data-composition-id="textos" data-composition-src="compositions/textos.html"
+      data-start="0" data-duration="43" data-track-index="2" data-track-kind="graphics"
+      data-width="1920" data-height="1080"></div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+    </script>
+  </div>
+</body>
+</html>
