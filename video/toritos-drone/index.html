@@ -13,19 +13,24 @@
 </head>
 <body>
   <!--
-    Reel vertical 1080×1920 (31 s) con 12 fotos aéreas de la quema de toritos y fuegos artificiales.
-      fotos   0–31 s  Paneo lento (Ken Burns) con fundidos de 0.5 s entre fotos
-      textos  0–31 s  Título de entrada, rótulos intermedios y cierre con llamado a comentar
+    Reel vertical 1080×1920 (32 s) con fotos aéreas de la quema de toritos, montado sobre una pista a 120 BPM.
+      0–4 s intro · 4–16 s drop 1 · 16–20 s pausa · 20–28 s drop 2 · 28–32 s cierre
+      fotos   Cortes al ritmo, golpes de zoom, destellos, sacudidas y barras de cine
+      textos  Título, palabras sobre el ritmo y cierre con llamado a comentar
+      musica  Pista original sintetizada (audio/musica.m4a)
   -->
-  <div id="main" data-composition-id="main" data-start="0" data-duration="31" data-width="1080" data-height="1920">
+  <div id="main" data-composition-id="main" data-start="0" data-duration="32" data-width="1080" data-height="1920">
+    <audio id="musica" src="audio/musica.m4a"
+      data-start="0" data-duration="32" data-track-index="0" data-volume="1"></audio>
+
     <div id="fotos" class="capa"
       data-composition-id="fotos" data-composition-src="compositions/fotos.html"
-      data-start="0" data-duration="31" data-track-index="1" data-track-kind="graphics"
+      data-start="0" data-duration="32" data-track-index="1" data-track-kind="graphics"
       data-width="1080" data-height="1920"></div>
 
     <div id="textos" class="capa"
       data-composition-id="textos" data-composition-src="compositions/textos.html"
-      data-start="0" data-duration="31" data-track-index="2" data-track-kind="graphics"
+      data-start="0" data-duration="32" data-track-index="2" data-track-kind="graphics"
       data-width="1080" data-height="1920"></div>
 
     <script>

@@ -1,24 +1,30 @@
 # Noche de toritos — Vista desde el dron (Contepequense)
 
-Reel vertical [HyperFrames](https://github.com/heygen-com/hyperframes) (1080×1920, 31 s) hecho con
-12 fotos aéreas de la quema de toritos y los fuegos artificiales en la plaza.
+Reel vertical [HyperFrames](https://github.com/heygen-com/hyperframes) (1080×1920, 32 s) con fotos aéreas
+de la quema de toritos, montado al ritmo de una pista original a **120 BPM** (un tiempo = 0.5 s).
 
-| Tiempo | Contenido | Archivo |
+| Tiempo | Música | Imagen |
 |---|---|---|
-| 0–31 s | 12 fotos con paneo lento (Ken Burns) y fundidos de 0.5 s, 2.5 s por foto | `compositions/fotos.html` |
-| 0–4.6 s | Logo + título "¡Noche de toritos!" · "Vista desde el dron" | `compositions/textos.html` |
-| 5.2 / 8.0 / 20.3 s | Rótulos: "La plaza, llena" · "¡Lluvia de chispas!" · "El cielo se ilumina" | `compositions/textos.html` |
-| 27.6–31 s | Cierre: "¿Tú también estuviste ahí?" + "¡Cuéntanos en los comentarios!" | `compositions/textos.html` |
+| 0–4 s | Pad, latidos y subida | Plaza en calma con barras de cine; título "Una noche de TORITOS" |
+| 4–16 s | **Drop 1** (impacto, bombo, palmas, bajo, arpegio) | Cortes cada tiempo doble, luego en corcheas; "Tradición · Fuego · Fiesta" |
+| 16–20 s | Pausa, redoble y subida | Fuegos sobre la iglesia + rampa de velocidad; "El cielo se ilumina" |
+| 20–28 s | **Drop 2** (con toms) | Cortes al ritmo; "Nuestra gente · plaza · fiesta" |
+| 28–32 s | Impacto final y cola | Se abre a la plaza completa; "¿Tú también estuviste ahí?" |
 
-Las fotos (`fotos/01.jpg`–`12.jpg`) llevan un ligero aumento de contraste y saturación. Se
-descartaron las tomas movidas o desenfocadas. Para cambiar el encuadre de una foto, ajusta su
-valor en `focos` (centro horizontal de la acción, 0–1) en `compositions/fotos.html`.
+Efectos: golpe de zoom en cada corte, destellos y sacudida de cámara en los impactos (4, 20 y 28 s),
+destello suave en cada compás, desenfoque de movimiento antes de cada drop, luz cálida (light leak) y
+etalonaje con contraste y saturación.
+
+## Archivos
+- `compositions/fotos.html` — lista de tomas (`tomas`: inicio, duración, foco, zoom) y efectos de cámara.
+- `compositions/textos.html` — títulos y palabras sincronizadas.
+- `audio/musica.m4a` — pista original (normalizada a -12 LUFS); `audio/musica.py` la regenera
+  (`python3 audio/musica.py musica.wav`, requiere numpy y scipy).
+- `fotos/pNN.jpg` — fotos usadas, con un ligero aumento de contraste y color.
 
 ## Uso
 ```bash
-npx hyperframes check                                # lint + validación + layout
-npx hyperframes preview                              # vista previa en el navegador
-npx hyperframes render -o renders/toritos-drone.mp4  # exportar MP4
+npx hyperframes check
+npx hyperframes preview
+npx hyperframes render -o renders/toritos-drone.mp4
 ```
-
-**Pendiente:** música. Agrega un `<audio>` en `index.html` con data-start="0" data-duration="31".

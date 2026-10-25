@@ -1,51 +1,155 @@
 <template>
   <style>
     #root { position: absolute; inset: 0; overflow: hidden; background: #000; }
-    /* Las fotos son 16:9; a 1920 px de alto miden 3413 px de ancho y se recorren en paneo horizontal */
-    #root img { position: absolute; top: 0; left: 0; height: 1920px; width: 3413px; opacity: 0; will-change: transform, opacity; }
-    #root .vigneta {
-      position: absolute; inset: 0; pointer-events: none;
+    #cam { position: absolute; inset: 0; overflow: hidden; }
+    /* Las fotos son 16:9: a 1920 px de alto miden 3413 px de ancho; el JS calcula el encuadre de cada toma */
+    #cam img { position: absolute; top: 0; left: 0; width: 3413px; height: 1920px; visibility: hidden; opacity: 0; }
+    #root .capa { position: absolute; inset: 0; pointer-events: none; }
+    #grade {
       background:
-        linear-gradient(180deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 72%, rgba(0,0,0,.6) 100%),
-        radial-gradient(130% 80% at 50% 50%, rgba(0,0,0,0) 60%, rgba(0,0,0,.35) 100%);
+        linear-gradient(180deg, rgba(0,20,40,.55) 0%, rgba(0,0,0,0) 25%, rgba(0,0,0,0) 70%, rgba(0,0,0,.65) 100%),
+        radial-gradient(120% 75% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,.55) 100%);
     }
+    #leak { background: radial-gradient(60% 40% at 85% 20%, rgba(255,140,30,.55), rgba(255,60,0,0) 70%); mix-blend-mode: screen; opacity: 0; }
+    #flash { background: #fff6e0; opacity: 0; }
+    #root .barra { position: absolute; left: 0; right: 0; height: 230px; background: #000; }
+    #bar-t { top: 0; }
+    #bar-b { bottom: 0; }
   </style>
 
   <div id="root" data-composition-id="fotos" data-width="1080" data-height="1920">
-    <img id="f01" data-layout-allow-overflow src="fotos/01.jpg" alt="" />
-    <img id="f02" data-layout-allow-overflow src="fotos/02.jpg" alt="" />
-    <img id="f03" data-layout-allow-overflow src="fotos/03.jpg" alt="" />
-    <img id="f04" data-layout-allow-overflow src="fotos/04.jpg" alt="" />
-    <img id="f05" data-layout-allow-overflow src="fotos/05.jpg" alt="" />
-    <img id="f06" data-layout-allow-overflow src="fotos/06.jpg" alt="" />
-    <img id="f07" data-layout-allow-overflow src="fotos/07.jpg" alt="" />
-    <img id="f08" data-layout-allow-overflow src="fotos/08.jpg" alt="" />
-    <img id="f09" data-layout-allow-overflow src="fotos/09.jpg" alt="" />
-    <img id="f10" data-layout-allow-overflow src="fotos/10.jpg" alt="" />
-    <img id="f11" data-layout-allow-overflow src="fotos/11.jpg" alt="" />
-    <img id="f12" data-layout-allow-overflow src="fotos/12.jpg" alt="" />
-    <div class="vigneta"></div>
+    <div id="cam">
+      <img id="s01" data-layout-allow-overflow src="fotos/p06.jpg" alt="" />
+      <img id="s02" data-layout-allow-overflow src="fotos/p07.jpg" alt="" />
+      <img id="s03" data-layout-allow-overflow src="fotos/p09.jpg" alt="" />
+      <img id="s04" data-layout-allow-overflow src="fotos/p11.jpg" alt="" />
+      <img id="s05" data-layout-allow-overflow src="fotos/p08.jpg" alt="" />
+      <img id="s06" data-layout-allow-overflow src="fotos/p10.jpg" alt="" />
+      <img id="s07" data-layout-allow-overflow src="fotos/p01.jpg" alt="" />
+      <img id="s08" data-layout-allow-overflow src="fotos/p03.jpg" alt="" />
+      <img id="s09" data-layout-allow-overflow src="fotos/p04.jpg" alt="" />
+      <img id="s10" data-layout-allow-overflow src="fotos/p07.jpg" alt="" />
+      <img id="s11" data-layout-allow-overflow src="fotos/p11.jpg" alt="" />
+      <img id="s12" data-layout-allow-overflow src="fotos/p09.jpg" alt="" />
+      <img id="s13" data-layout-allow-overflow src="fotos/p10.jpg" alt="" />
+      <img id="s14" data-layout-allow-overflow src="fotos/p02.jpg" alt="" />
+      <img id="s15" data-layout-allow-overflow src="fotos/p19.jpg" alt="" />
+      <img id="s16" data-layout-allow-overflow src="fotos/p20.jpg" alt="" />
+      <img id="s17" data-layout-allow-overflow src="fotos/p03.jpg" alt="" />
+      <img id="s18" data-layout-allow-overflow src="fotos/p09.jpg" alt="" />
+      <img id="s19" data-layout-allow-overflow src="fotos/p07.jpg" alt="" />
+      <img id="s20" data-layout-allow-overflow src="fotos/p11.jpg" alt="" />
+      <img id="s21" data-layout-allow-overflow src="fotos/p08.jpg" alt="" />
+      <img id="s22" data-layout-allow-overflow src="fotos/p10.jpg" alt="" />
+      <img id="s23" data-layout-allow-overflow src="fotos/p19.jpg" alt="" />
+      <img id="s24" data-layout-allow-overflow src="fotos/p04.jpg" alt="" />
+      <img id="s25" data-layout-allow-overflow src="fotos/p03.jpg" alt="" />
+      <img id="s26" data-layout-allow-overflow src="fotos/p09.jpg" alt="" />
+      <img id="s27" data-layout-allow-overflow src="fotos/p20.jpg" alt="" />
+      <img id="s28" data-layout-allow-overflow src="fotos/p01.jpg" alt="" />
+    </div>
+    <div id="grade" class="capa"></div>
+    <div id="leak" class="capa"></div>
+    <div id="flash" class="capa"></div>
+    <div id="bar-t" class="barra" data-layout-allow-overflow></div>
+    <div id="bar-b" class="barra" data-layout-allow-overflow></div>
   </div>
 
   <script>
     (function () {
       const tl = gsap.timeline({ paused: true });
-      const SLOT = 2.5, FADE = 0.5, ANCHO = 3413, VISTA = 1080;
-      // Centro horizontal (0–1) de la acción en cada foto y dirección del paneo
-      const focos = [0.45, 0.42, 0.40, 0.42, 0.45, 0.45, 0.47, 0.50, 0.48, 0.47, 0.47, 0.48];
+      const W = 3413, H = 1920;
 
-      focos.forEach((foco, i) => {
-        const id = "#f" + String(i + 1).padStart(2, "0");
-        const inicio = i * SLOT;
-        const ultima = i === focos.length - 1;
-        const dur = ultima ? 31 - inicio : SLOT + FADE;
-        const centro = Math.min(0, Math.max(VISTA - ANCHO, VISTA / 2 - foco * ANCHO));
-        const dir = i % 2 ? 1 : -1;
+      // Encuadre: escala s (1 = la foto llena el alto) centrada en el punto (fx, fy) de la foto, sin dejar bordes
+      function pose(s, fx, fy) {
+        const x = Math.min(0, Math.max(1080 - W * s, 540 - fx * W * s));
+        const y = Math.min(0, Math.max(1920 - H * s, 960 - fy * H * s));
+        return { x, y, scale: s };
+      }
 
-        tl.set(id, { x: centro - dir * 220, scale: 1, transformOrigin: (foco * 100) + "% 50%" }, 0);
-        tl.to(id, { x: centro + dir * 220, scale: 1.07, duration: dur, ease: "none" }, inicio);
-        tl.fromTo(id, { opacity: 0 }, { opacity: 1, duration: i === 0 ? 0.01 : FADE, ease: "power1.inOut" }, inicio);
+      // [inicio, duración, foco x, foco y, zoom inicial, zoom final, desplazamiento del foco, golpe de zoom al entrar]
+      // La música va a 120 BPM: un tiempo = 0.5 s, un compás = 2 s.
+      const tomas = [
+        [0.0, 4.0, 0.50, 0.55, 1.00, 1.30, 0.00, 0],     // intro: plaza en calma
+        [4.0, 1.0, 0.38, 0.45, 1.10, 1.22, 0.04, 0.25],   // DROP 1
+        [5.0, 1.0, 0.42, 0.50, 1.15, 1.30, -0.04, 0.2],
+        [6.0, 1.0, 0.48, 0.65, 1.20, 1.35, 0.04, 0.2],
+        [7.0, 1.0, 0.42, 0.45, 1.10, 1.25, -0.04, 0.2],
+        [8.0, 1.0, 0.47, 0.45, 1.15, 1.30, 0.04, 0.2],
+        [9.0, 1.0, 0.42, 0.62, 1.20, 1.10, -0.04, 0.2],
+        [10.0, 1.0, 0.45, 0.35, 1.10, 1.30, 0.03, 0.2],
+        [11.0, 1.0, 0.45, 0.40, 1.15, 1.30, -0.03, 0.2],
+        [12.0, 0.5, 0.42, 0.62, 1.70, 1.85, 0.02, 0.15],  // detalles en corcheas
+        [12.5, 0.5, 0.46, 0.72, 1.70, 1.85, -0.02, 0.15],
+        [13.0, 0.5, 0.42, 0.55, 1.70, 1.85, 0.02, 0.15],
+        [13.5, 0.5, 0.47, 0.55, 1.70, 1.85, -0.02, 0.15],
+        [14.0, 1.0, 0.50, 0.55, 1.10, 1.25, 0.06, 0.2],   // toma barrida (movimiento real del dron)
+        [15.0, 1.0, 0.45, 0.35, 1.15, 1.40, 0.00, 0.2],   // redoble de toms
+        [16.0, 2.0, 0.47, 0.42, 1.05, 1.20, 0.02, 0],     // pausa: fuegos sobre la iglesia
+        [18.0, 2.0, 0.45, 0.35, 1.00, 1.90, 0.00, 0],     // rampa de velocidad hacia el drop 2
+        [20.0, 1.0, 0.42, 0.50, 1.10, 1.25, 0.04, 0.25],  // DROP 2
+        [21.0, 1.0, 0.38, 0.45, 1.15, 1.30, -0.04, 0.2],
+        [22.0, 1.0, 0.48, 0.65, 1.20, 1.35, 0.04, 0.2],
+        [23.0, 1.0, 0.42, 0.45, 1.10, 1.25, -0.04, 0.2],
+        [24.0, 1.0, 0.47, 0.45, 1.15, 1.30, 0.04, 0.2],
+        [25.0, 1.0, 0.45, 0.35, 1.10, 1.30, -0.03, 0.2],
+        [26.0, 0.5, 0.45, 0.40, 1.60, 1.75, 0.02, 0.15],
+        [26.5, 0.5, 0.45, 0.35, 1.60, 1.75, -0.02, 0.15],
+        [27.0, 0.5, 0.42, 0.55, 1.60, 1.75, 0.02, 0.15],
+        [27.5, 0.5, 0.47, 0.45, 1.60, 1.75, -0.02, 0.15],
+        [28.0, 4.0, 0.45, 0.55, 1.60, 1.05, 0.00, 0],     // cierre: se abre a la plaza completa
+      ];
+
+      tomas.forEach(([t0, d, fx, fy, z0, z1, dx, golpe], i) => {
+        const id = "#s" + String(i + 1).padStart(2, "0");
+        const ultima = i === tomas.length - 1;
+        const rampa = t0 === 18.0, apertura = t0 === 28.0;
+        tl.set(id, { transformOrigin: "0 0", ...pose(z0 + golpe, fx, fy) }, 0);
+        tl.set(id, { autoAlpha: 1 }, t0);
+        let t = t0;
+        if (golpe) {
+          tl.to(id, { ...pose(z0, fx, fy), duration: 0.22, ease: "expo.out" }, t);
+          t += 0.22;
+        }
+        const ease = rampa ? "expo.in" : apertura ? "expo.out" : i === 0 ? "sine.inOut" : "none";
+        tl.to(id, { ...pose(z1, fx + dx, fy), duration: t0 + d - t, ease }, t);
+        if (!ultima) tl.set(id, { autoAlpha: 0 }, t0 + d);
       });
+
+      // Etalonaje y desenfoque de movimiento antes de cada drop
+      const base = "contrast(1.12) saturate(1.22) brightness(1.03) blur(0px)";
+      const borroso = "contrast(1.12) saturate(1.22) brightness(1.25) blur(9px)";
+      tl.set("#cam", { filter: base }, 0);
+      [[3.55, 4.0], [19.55, 20.0]].forEach(([a, b]) => {
+        tl.to("#cam", { filter: borroso, duration: b - a, ease: "expo.in" }, a);
+        tl.set("#cam", { filter: base }, b);
+      });
+
+      // Destellos: fuertes en los impactos, suaves al inicio de cada compás de los drops
+      [4, 20, 28].forEach((t) => tl.fromTo("#flash", { opacity: 0.95 }, { opacity: 0, duration: 0.6, ease: "power2.out", immediateRender: false }, t));
+      [6, 8, 10, 12, 14, 22, 24, 26].forEach((t) => tl.fromTo("#flash", { opacity: 0.28 }, { opacity: 0, duration: 0.25, ease: "power2.out", immediateRender: false }, t));
+
+      // Sacudida de cámara en los impactos
+      [4, 20, 28].forEach((t) => {
+        for (let k = 0; k < 10; k++) {
+          const a = 26 * (1 - k / 10);
+          tl.to("#cam", { x: (k % 2 ? -1 : 1) * a, y: (k % 3 - 1) * a * 0.7, duration: 0.045, ease: "none" }, t + k * 0.045);
+        }
+        tl.to("#cam", { x: 0, y: 0, duration: 0.05 }, t + 0.45);
+      });
+
+      // Barras de cine: en la intro, la pausa y el cierre; se abren con cada drop
+      tl.set("#bar-t", { yPercent: 0 }, 0);
+      tl.set("#bar-b", { yPercent: 0 }, 0);
+      [[4, "out"], [16, "in"], [20, "out"], [28, "in"]].forEach(([t, modo]) => {
+        tl.to("#bar-t", { yPercent: modo === "out" ? -100 : 0, duration: 0.35, ease: "expo.out" }, t);
+        tl.to("#bar-b", { yPercent: modo === "out" ? 100 : 0, duration: 0.35, ease: "expo.out" }, t);
+      });
+
+      // Luz cálida (light leak) en la pausa y el cierre
+      tl.to("#leak", { opacity: 1, duration: 1.2, ease: "sine.inOut" }, 16.2);
+      tl.to("#leak", { opacity: 0, duration: 0.3 }, 19.7);
+      tl.to("#leak", { opacity: 0.8, duration: 1.5, ease: "sine.inOut" }, 28.4);
 
       window.__timelines = window.__timelines || {};
       window.__timelines["fotos"] = tl;
