@@ -15,8 +15,8 @@ Acabado de cine: etalonaje teal & orange, viñeta, grano de película a 24 cuadr
 temblor contenido en los golpes. Las frases van en la barra inferior, como subtítulos de cine.
 
 ## Archivos
-- `clips/` — tres fragmentos del video del dron (sin audio), recortados, sin ruido, con el etalonaje y el grano
-  ya aplicados con ffmpeg: `vuelo.mp4` (origen 3–11 s, a 0.75× con interpolación de cuadros),
+- `clips/` — tres fragmentos del video del dron (sin audio), recortados, sin ruido, con el etalonaje
+  ya aplicado con ffmpeg (sin grano, para que pesen poco): `vuelo.mp4` (origen 3–11 s, a 0.75× con interpolación de cuadros),
   `campanario.mp4` (origen 21.5–24.2 s, a 2×) y `plaza.mp4` (origen 30–36.6 s). Se colocan en `index.html`
   debajo de la capa de fotos; mientras se ven, `compositions/fotos.html` apaga sus capas de mezcla.
 - `compositions/fotos.html` — tomas (`tomas`), etalonaje, grano, destellos y barras.

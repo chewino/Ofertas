@@ -81,7 +81,7 @@
         tl.set(id, { autoAlpha: 0 }, t1);
       });
 
-      // Durante los clips de video el etalonaje y el grano ya vienen en el archivo (clips/): las capas de mezcla
+      // Durante los clips de video el etalonaje ya viene en el archivo (clips/): las capas de mezcla
       // se apagan, porque sobre el fondo transparente de esta escena pintarían una película azul encima del video.
       const mezcla = ["#teal", "#calido", "#grano"];
       tl.set(mezcla, { autoAlpha: 0 }, 0);
