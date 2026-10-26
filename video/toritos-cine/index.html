@@ -9,13 +9,14 @@
     html, body { margin: 0; padding: 0; width: 1920px; height: 1080px; overflow: hidden; background: #000; }
     #main { position: relative; width: 1920px; height: 1080px; overflow: hidden; }
     .capa { position: absolute; inset: 0; }
+    .toma { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; object-fit: cover; }
   </style>
 </head>
 <body>
   <!--
     Versión cinematográfica 1920×1080 con encuadre de cine 2.39:1 (43 s), sobre una partitura original a 90 BPM.
     Un compás = 2.667 s.
-      0–10.7 s  intro: piano, fundidos lentos, "Contepequense presenta" y primera frase
+      0–10.7 s  intro: vuelo real del dron hacia la iglesia (video en cámara lenta), "Contepequense presenta" y primera frase
       10.7–21.3 s  construcción: "braam", cuerdas y tambores; tomas largas con fundidos cortos
       21.3–32 s  clímax: cortes secos en cada compás, "Fe · Fuego · Fiesta", rampa y silencio
       32–43 s  golpe final, título "TORITOS" y cierre con llamado a comentar
@@ -24,14 +25,23 @@
     <audio id="musica" src="audio/musica.m4a"
       data-start="0" data-duration="43" data-track-index="0" data-volume="1"></audio>
 
-    <div id="fotos" class="capa"
+    <!-- Clips del video del dron, ya recortados, aclarados y con el ritmo final (clips/). Van debajo de las fotos;
+         el etalonaje, el grano y las barras de cine de compositions/fotos.html los cubren igual que a las fotos. -->
+    <video id="vuelo" class="clip toma" src="clips/vuelo.mp4" muted playsinline
+      data-start="0" data-duration="10.667" data-track-index="1" style="z-index: 1"></video>
+    <video id="campanario" class="clip toma" src="clips/campanario.mp4" muted playsinline
+      data-start="29.333" data-duration="1.334" data-track-index="1" style="z-index: 2"></video>
+    <video id="plaza" class="clip toma" src="clips/plaza.mp4" muted playsinline
+      data-start="36.5" data-duration="6.5" data-track-index="1" style="z-index: 3"></video>
+
+    <div id="fotos" class="capa" style="z-index: 4"
       data-composition-id="fotos" data-composition-src="compositions/fotos.html"
-      data-start="0" data-duration="43" data-track-index="1" data-track-kind="graphics"
+      data-start="0" data-duration="43" data-track-index="2" data-track-kind="graphics"
       data-width="1920" data-height="1080"></div>
 
-    <div id="textos" class="capa"
+    <div id="textos" class="capa" style="z-index: 5"
       data-composition-id="textos" data-composition-src="compositions/textos.html"
-      data-start="0" data-duration="43" data-track-index="2" data-track-kind="graphics"
+      data-start="0" data-duration="43" data-track-index="3" data-track-kind="graphics"
       data-width="1920" data-height="1080"></div>
 
     <script>

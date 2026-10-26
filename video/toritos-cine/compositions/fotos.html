@@ -1,6 +1,7 @@
 <template>
   <style>
-    #root { position: absolute; inset: 0; overflow: hidden; background: #000; }
+    /* Fondo transparente: debajo están los clips de video del dron (index.html) */
+    #root { position: absolute; inset: 0; overflow: hidden; }
     #cam { position: absolute; inset: 0; overflow: hidden; }
     #cam img { position: absolute; top: 0; left: 0; width: 1920px; height: 1080px; visibility: hidden; opacity: 0; }
     #root .capa { position: absolute; inset: 0; pointer-events: none; }
@@ -20,8 +21,6 @@
 
   <div id="root" data-composition-id="fotos" data-width="1920" data-height="1080">
     <div id="cam">
-      <img id="s01" data-layout-allow-overflow src="fotos/p06.jpg" alt="" />
-      <img id="s02" data-layout-allow-overflow src="fotos/p01.jpg" alt="" />
       <img id="s03" data-layout-allow-overflow src="fotos/p11.jpg" alt="" />
       <img id="s04" data-layout-allow-overflow src="fotos/p07.jpg" alt="" />
       <img id="s05" data-layout-allow-overflow src="fotos/p10.jpg" alt="" />
@@ -29,10 +28,8 @@
       <img id="s07" data-layout-allow-overflow src="fotos/p09.jpg" alt="" />
       <img id="s08" data-layout-allow-overflow src="fotos/p08.jpg" alt="" />
       <img id="s09" data-layout-allow-overflow src="fotos/p19.jpg" alt="" />
-      <img id="s10" data-layout-allow-overflow src="fotos/p04.jpg" alt="" />
       <img id="s11" data-layout-allow-overflow src="fotos/p03.jpg" alt="" />
       <img id="s12" data-layout-allow-overflow src="fotos/p20.jpg" alt="" />
-      <img id="s13" data-layout-allow-overflow src="fotos/p01.jpg" alt="" />
     </div>
     <div id="teal" class="capa"></div>
     <div id="calido" class="capa"></div>
@@ -59,34 +56,39 @@
         };
       }
 
-      // [inicio, foco x, foco y, zoom inicial, zoom final, deriva x, fundido de entrada (0 = corte seco), curva]
+      // Fotos entre los clips de video: vuelo del dron 0–10.7 s, acercamiento al campanario 29.3–30.7 s
+      // y plaza con la gente desde 36.5 s (la foto del golpe final se disuelve sobre ese clip).
+      // [id, inicio, fin, foco x, foco y, zoom inicial, zoom final, deriva x, fundido de entrada, fundido de salida, curva]
       const tomas = [
-        [0,         0.50, 0.55, 1.00, 1.14, 0.00, 0,   "sine.inOut"], // plaza en calma
-        [2 * BAR,   0.45, 0.55, 1.05, 1.20, 0.02, 1.4, "none"],       // la plaza completa
-        [4 * BAR,   0.48, 0.62, 1.10, 1.22, 0.00, 0,   "none"],       // braam: corte seco
-        [5 * BAR,   0.40, 0.45, 1.10, 1.22, 0.02, 0.7, "none"],
-        [6 * BAR,   0.47, 0.45, 1.10, 1.22, -0.02, 0.7, "none"],
-        [7 * BAR,   0.50, 0.50, 1.05, 1.16, 0.03, 0.7, "none"],
-        [8 * BAR,   0.42, 0.50, 1.15, 1.30, 0.00, 0,   "none"],       // clímax: cortes secos
-        [9 * BAR,   0.42, 0.45, 1.15, 1.30, 0.02, 0,   "none"],
-        [10 * BAR,  0.45, 0.35, 1.10, 1.30, 0.00, 0,   "none"],
-        [11 * BAR,  0.45, 0.40, 1.20, 1.35, 0.00, 0,   "none"],
-        [11.5 * BAR, 0.45, 0.35, 1.10, 1.70, 0.00, 0,  "expo.in"],    // rampa hacia el silencio
-        [12 * BAR,  0.47, 0.42, 1.30, 1.10, 0.00, 0,   "sine.out"],   // golpe final: fuegos sobre la iglesia
-        [13.7 * BAR, 0.45, 0.50, 1.18, 1.00, 0.00, 1.6, "sine.inOut"], // la plaza, se abre despacio
+        ["#s03", 4 * BAR,    5 * BAR + 0.7,  0.48, 0.62, 1.10, 1.22, 0.00, 0,   0,   "none"], // braam: corte seco
+        ["#s04", 5 * BAR,    6 * BAR + 0.7,  0.40, 0.45, 1.10, 1.22, 0.02, 0.7, 0,   "none"],
+        ["#s05", 6 * BAR,    7 * BAR + 0.7,  0.47, 0.45, 1.10, 1.22, -0.02, 0.7, 0,  "none"],
+        ["#s06", 7 * BAR,    8 * BAR,        0.50, 0.50, 1.05, 1.16, 0.03, 0.7, 0,   "none"],
+        ["#s07", 8 * BAR,    9 * BAR,        0.42, 0.50, 1.15, 1.30, 0.00, 0,   0,   "none"], // clímax: cortes secos
+        ["#s08", 9 * BAR,    10 * BAR,       0.42, 0.45, 1.15, 1.30, 0.02, 0,   0,   "none"],
+        ["#s09", 10 * BAR,   11 * BAR,       0.45, 0.35, 1.10, 1.30, 0.00, 0,   0,   "none"],
+        ["#s11", 11.5 * BAR, 12 * BAR,       0.45, 0.35, 1.10, 1.70, 0.00, 0,   0,   "expo.in"], // rampa hacia el silencio
+        ["#s12", 12 * BAR,   13.7 * BAR + 1.6, 0.47, 0.42, 1.30, 1.10, 0.00, 0, 1.6, "sine.out"], // golpe final
       ];
       const FIN = 43;
 
-      tomas.forEach(([t0, fx, fy, z0, z1, dx, fade, ease], i) => {
-        const id = "#s" + String(i + 1).padStart(2, "0");
-        const sig = tomas[i + 1];
-        const hasta = sig ? sig[0] + sig[6] : FIN;
+      tomas.forEach(([id, t0, t1, fx, fy, z0, z1, dx, fadeIn, fadeOut, ease]) => {
         tl.set(id, { transformOrigin: "0 0", ...pose(z0, fx, fy) }, 0);
-        if (fade) tl.fromTo(id, { autoAlpha: 0 }, { autoAlpha: 1, duration: fade, ease: "sine.inOut", immediateRender: false }, t0);
+        if (fadeIn) tl.fromTo(id, { autoAlpha: 0 }, { autoAlpha: 1, duration: fadeIn, ease: "sine.inOut", immediateRender: false }, t0);
         else tl.set(id, { autoAlpha: 1 }, t0);
-        tl.to(id, { ...pose(z1, fx + dx, fy), duration: hasta - t0, ease }, t0);
-        if (sig) tl.set(id, { autoAlpha: 0 }, hasta);
+        tl.to(id, { ...pose(z1, fx + dx, fy), duration: t1 - t0, ease }, t0);
+        if (fadeOut) tl.to(id, { opacity: 0, duration: fadeOut, ease: "sine.inOut" }, t1 - fadeOut);
+        tl.set(id, { autoAlpha: 0 }, t1);
       });
+
+      // Durante los clips de video el etalonaje y el grano ya vienen en el archivo (clips/): las capas de mezcla
+      // se apagan, porque sobre el fondo transparente de esta escena pintarían una película azul encima del video.
+      const mezcla = ["#teal", "#calido", "#grano"];
+      tl.set(mezcla, { autoAlpha: 0 }, 0);
+      tl.set(mezcla, { autoAlpha: 1 }, 4 * BAR);
+      tl.set(mezcla, { autoAlpha: 0 }, 11 * BAR);
+      tl.set(mezcla, { autoAlpha: 1 }, 11.5 * BAR);
+      tl.to(mezcla, { autoAlpha: 0, duration: 1.6, ease: "sine.inOut" }, 13.7 * BAR);
 
       tl.set("#cam", { filter: "contrast(1.16) saturate(1.06) brightness(0.97)" }, 0);
 
