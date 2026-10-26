@@ -1,0 +1,155 @@
+<template>
+  <style>
+    /* Fondo transparente: debajo están los clips de video del dron (index.html) */
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    #cam { position: absolute; inset: 0; overflow: hidden; }
+    #cam img { position: absolute; top: 0; left: 0; width: 1920px; height: 1080px; visibility: hidden; opacity: 0; }
+    #root .capa { position: absolute; inset: 0; pointer-events: none; }
+    #vigneta { background: radial-gradient(90% 90% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,.55) 100%); }
+    #flash { background: #fff6dc; opacity: 0; }
+    #negro { background: #000; opacity: 0; }
+  </style>
+
+  <!-- Generado con una lista de tomas; ver README.md -->
+  <div id="root" data-composition-id="fotos" data-width="1920" data-height="1080">
+    <div id="cam">
+      <img id="t01" data-layout-allow-overflow src="fotos/p07.jpg" alt="" />
+      <img id="t02" data-layout-allow-overflow src="fotos/p09.jpg" alt="" />
+      <img id="t03" data-layout-allow-overflow src="fotos/p11.jpg" alt="" />
+      <img id="t04" data-layout-allow-overflow src="fotos/p08.jpg" alt="" />
+      <img id="t05" data-layout-allow-overflow src="fotos/p10.jpg" alt="" />
+      <img id="t06" data-layout-allow-overflow src="fotos/p01.jpg" alt="" />
+      <img id="t07" data-layout-allow-overflow src="fotos/p03.jpg" alt="" />
+      <img id="t08" data-layout-allow-overflow src="fotos/p04.jpg" alt="" />
+      <img id="t09" data-layout-allow-overflow src="fotos/p19.jpg" alt="" />
+      <img id="t10" data-layout-allow-overflow src="fotos/p20.jpg" alt="" />
+      <img id="t11" data-layout-allow-overflow src="fotos/p02.jpg" alt="" />
+      <img id="t12" data-layout-allow-overflow src="fotos/p07.jpg" alt="" />
+      <img id="t13" data-layout-allow-overflow src="fotos/p11.jpg" alt="" />
+      <img id="t14" data-layout-allow-overflow src="fotos/p09.jpg" alt="" />
+      <img id="t15" data-layout-allow-overflow src="fotos/p10.jpg" alt="" />
+      <img id="t16" data-layout-allow-overflow src="fotos/p03.jpg" alt="" />
+      <img id="t17" data-layout-allow-overflow src="fotos/p09.jpg" alt="" />
+      <img id="t18" data-layout-allow-overflow src="fotos/p07.jpg" alt="" />
+      <img id="t19" data-layout-allow-overflow src="fotos/p11.jpg" alt="" />
+      <img id="t20" data-layout-allow-overflow src="fotos/p08.jpg" alt="" />
+      <img id="t21" data-layout-allow-overflow src="fotos/p19.jpg" alt="" />
+      <img id="t22" data-layout-allow-overflow src="fotos/p10.jpg" alt="" />
+      <img id="t23" data-layout-allow-overflow src="fotos/p03.jpg" alt="" />
+      <img id="t24" data-layout-allow-overflow src="fotos/p04.jpg" alt="" />
+      <img id="t25" data-layout-allow-overflow src="fotos/p07.jpg" alt="" />
+      <img id="t26" data-layout-allow-overflow src="fotos/p09.jpg" alt="" />
+      <img id="t27" data-layout-allow-overflow src="fotos/p11.jpg" alt="" />
+      <img id="t28" data-layout-allow-overflow src="fotos/p10.jpg" alt="" />
+      <img id="t29" data-layout-allow-overflow src="fotos/p08.jpg" alt="" />
+      <img id="t30" data-layout-allow-overflow src="fotos/p04.jpg" alt="" />
+      <img id="t31" data-layout-allow-overflow src="fotos/p19.jpg" alt="" />
+      <img id="t32" data-layout-allow-overflow src="fotos/p20.jpg" alt="" />
+      <img id="t33" data-layout-allow-overflow src="fotos/p01.jpg" alt="" />
+      <img id="t34" data-layout-allow-overflow src="fotos/p09.jpg" alt="" />
+      <img id="t35" data-layout-allow-overflow src="fotos/p11.jpg" alt="" />
+      <img id="t36" data-layout-allow-overflow src="fotos/p07.jpg" alt="" />
+      <img id="t37" data-layout-allow-overflow src="fotos/p20.jpg" alt="" />
+    </div>
+    <div id="vigneta" class="capa"></div>
+    <div id="flash" class="capa"></div>
+    <div id="negro" class="capa"></div>
+  </div>
+
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const W = 1920, H = 1080, B = 60 / 130, FIN = 42;
+
+      // Encuadre: escala s (1 = la foto llena el cuadro) centrada en (fx, fy), sin dejar bordes
+      function pose(s, fx, fy) {
+        return {
+          x: Math.min(0, Math.max(W - W * s, W / 2 - fx * W * s)),
+          y: Math.min(0, Math.max(H - H * s, H / 2 - fy * H * s)),
+          scale: s,
+        };
+      }
+
+      // [id, tiempo musical de entrada, duración en tiempos (null = hasta el final), foco x, foco y, zoom inicial, zoom final, deriva x]
+      const tomas = [
+        ["#t01", 8, 2, 0.38, 0.45, 1.1, 1.22, 0.03],
+        ["#t02", 10, 2, 0.42, 0.5, 1.12, 1.25, -0.03],
+        ["#t03", 12, 2, 0.48, 0.62, 1.15, 1.28, 0.03],
+        ["#t04", 14, 2, 0.42, 0.45, 1.1, 1.22, -0.03],
+        ["#t05", 16, 2, 0.47, 0.45, 1.12, 1.25, 0.03],
+        ["#t06", 18, 2, 0.42, 0.6, 1.15, 1.28, -0.03],
+        ["#t07", 20, 2, 0.45, 0.35, 1.1, 1.25, 0.02],
+        ["#t08", 22, 2, 0.45, 0.4, 1.12, 1.26, -0.02],
+        ["#t09", 24, 2, 0.45, 0.35, 1.1, 1.25, 0.02],
+        ["#t10", 26, 2, 0.47, 0.42, 1.1, 1.25, -0.02],
+        ["#t11", 28, 2, 0.5, 0.55, 1.08, 1.18, 0.05],
+        ["#t12", 30, 2, 0.42, 0.62, 1.7, 1.85, 0.02],
+        ["#t13", 32, 2, 0.46, 0.72, 1.7, 1.85, -0.02],
+        ["#t14", 34, 2, 0.42, 0.55, 1.7, 1.85, 0.02],
+        ["#t15", 36, 2, 0.47, 0.55, 1.7, 1.85, -0.02],
+        ["#t16", 38, 2, 0.45, 0.35, 1.15, 1.4, 0],
+        ["#t17", 48, 2, 0.42, 0.5, 1.15, 1.28, 0.03],
+        ["#t18", 50, 2, 0.38, 0.45, 1.12, 1.25, -0.03],
+        ["#t19", 52, 2, 0.48, 0.62, 1.15, 1.28, 0.03],
+        ["#t20", 54, 2, 0.42, 0.45, 1.12, 1.25, -0.03],
+        ["#t21", 56, 2, 0.45, 0.35, 1.12, 1.28, 0.02],
+        ["#t22", 58, 2, 0.47, 0.45, 1.15, 1.28, -0.02],
+        ["#t23", 60, 2, 0.45, 0.35, 1.12, 1.28, 0.02],
+        ["#t24", 62, 2, 0.45, 0.4, 1.15, 1.3, -0.02],
+        ["#t25", 68, 1, 0.42, 0.62, 1.7, 1.8, 0.02],
+        ["#t26", 69, 1, 0.42, 0.55, 1.7, 1.8, -0.02],
+        ["#t27", 70, 1, 0.46, 0.72, 1.7, 1.8, 0.02],
+        ["#t28", 71, 1, 0.47, 0.55, 1.7, 1.8, -0.02],
+        ["#t29", 72, 1, 0.42, 0.45, 1.4, 1.5, 0.02],
+        ["#t30", 73, 1, 0.45, 0.4, 1.4, 1.5, -0.02],
+        ["#t31", 74, 2, 0.45, 0.35, 1.12, 1.28, 0.02],
+        ["#t32", 76, 2, 0.47, 0.42, 1.12, 1.28, -0.02],
+        ["#t33", 78, 2, 0.42, 0.6, 1.15, 1.28, 0.02],
+        ["#t34", 80, 0.5, 0.42, 0.55, 1.7, 1.75, 0],
+        ["#t35", 80.5, 0.5, 0.46, 0.72, 1.7, 1.75, 0],
+        ["#t36", 81, 1, 0.42, 0.62, 1.7, 1.8, 0],
+        ["#t37", 82, null, 0.47, 0.45, 1.3, 1.05, 0]
+      ];
+
+      tomas.forEach(([id, b0, nb, fx, fy, z0, z1, dx]) => {
+        const t0 = b0 * B, t1 = nb === null ? FIN : (b0 + nb) * B;
+        tl.set(id, { transformOrigin: "0 0", ...pose(z0 + 0.15, fx, fy) }, 0);
+        tl.set(id, { autoAlpha: 1 }, t0);
+        // golpe de zoom al entrar y luego deriva lenta
+        tl.to(id, { ...pose(z0, fx, fy), duration: 0.2, ease: "expo.out" }, t0);
+        tl.to(id, { ...pose(z1, fx + dx, fy), duration: t1 - t0 - 0.2, ease: nb === null ? "sine.out" : "none" }, t0 + 0.2);
+        if (nb !== null) tl.set(id, { autoAlpha: 0 }, t1);
+      });
+
+      tl.set("#cam", { filter: "contrast(1.14) saturate(1.35) brightness(1.04)", transformOrigin: "50% 50%" }, 0);
+
+      // Pulso en cada tiempo mientras toca la banda (partes A y B)
+      for (let b = 8; b < 80; b++) {
+        if (b >= 40 && b < 48) continue; // break: el clip de la iglesia
+        tl.fromTo("#cam", { scale: b % 2 ? 1.012 : 1.03 }, { scale: 1, duration: B * 0.8, ease: "power2.out", immediateRender: false }, b * B);
+      }
+
+      // Destellos: fuertes al entrar cada parte y en el golpe final, suaves cada 4 tiempos
+      [8, 48, 82].forEach((b) => tl.fromTo("#flash", { opacity: 0.85 }, { opacity: 0, duration: 0.5, ease: "power2.out", immediateRender: false }, b * B));
+      for (let b = 12; b < 80; b += 4) {
+        if ((b >= 40 && b < 48) || b === 48) continue;
+        tl.fromTo("#flash", { opacity: 0.22 }, { opacity: 0, duration: 0.22, ease: "power2.out", immediateRender: false }, b * B);
+      }
+
+      // Sacudida en los golpes grandes
+      [8, 48, 82].forEach((b) => {
+        const t = b * B;
+        for (let k = 0; k < 8; k++) {
+          const a = 22 * (1 - k / 8);
+          tl.to("#cam", { x: (k % 2 ? -1 : 1) * a, y: ((k % 3) - 1) * a * 0.7, duration: 0.04, ease: "none" }, t + k * 0.04);
+        }
+        tl.to("#cam", { x: 0, y: 0, duration: 0.05 }, t + 0.32);
+      });
+
+      tl.to("#negro", { opacity: 1, duration: 0.6, ease: "power1.in" }, FIN - 0.6);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["fotos"] = tl;
+    })();
+  </script>
+</template>

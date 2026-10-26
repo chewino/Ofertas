@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=1920, height=1080" />
+  <title>Toritos — Versión con banda</title>
+  <script src="vendor/gsap.min.js"></script>
+  <style>
+    html, body { margin: 0; padding: 0; width: 1920px; height: 1080px; overflow: hidden; background: #000; }
+    #main { position: relative; width: 1920px; height: 1080px; overflow: hidden; }
+    .capa { position: absolute; inset: 0; }
+    .toma { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; object-fit: cover; }
+  </style>
+</head>
+<body>
+  <!--
+    Versión movida 1920×1080 (42 s) sobre una pieza original estilo banda sinaloense a 130 BPM (un tiempo = 0.4615 s).
+      tiempos 0–8    intro: fanfarria; video del dron a 2× con "¡Noche de toritos!"
+      tiempos 8–40   parte A: corte cada 2 tiempos, pulso en cada tiempo
+      tiempos 40–48  break de tambora: video de la iglesia a 2×
+      tiempos 48–80  parte B: cortes cada 2 tiempos y cada tiempo; video de la gente en 64–68
+      tiempos 80–88  final de banda y cierre con llamado a comentar
+  -->
+  <div id="main" data-composition-id="main" data-start="0" data-duration="42" data-width="1920" data-height="1080">
+    <audio id="musica" src="audio/musica.m4a"
+      data-start="0" data-duration="42" data-track-index="0" data-volume="1"></audio>
+
+    <!-- Clips del video del dron a 2×, ya recortados y con color (clips/). Van debajo de la capa de fotos. -->
+    <video id="vuelo" class="clip toma" src="clips/vuelo.mp4" muted playsinline
+      data-start="0" data-duration="3.692" data-track-index="1" style="z-index: 1"></video>
+    <video id="iglesia" class="clip toma" src="clips/iglesia.mp4" muted playsinline
+      data-start="18.462" data-duration="3.692" data-track-index="1" style="z-index: 2"></video>
+    <video id="gente" class="clip toma" src="clips/gente.mp4" muted playsinline
+      data-start="29.538" data-duration="1.846" data-track-index="1" style="z-index: 3"></video>
+
+    <div id="fotos" class="capa" style="z-index: 4"
+      data-composition-id="fotos" data-composition-src="compositions/fotos.html"
+      data-start="0" data-duration="42" data-track-index="2" data-track-kind="graphics"
+      data-width="1920" data-height="1080"></div>
+
+    <div id="textos" class="capa" style="z-index: 5"
+      data-composition-id="textos" data-composition-src="compositions/textos.html"
+      data-start="0" data-duration="42" data-track-index="3" data-track-kind="graphics"
+      data-width="1920" data-height="1080"></div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+    </script>
+  </div>
+</body>
+</html>

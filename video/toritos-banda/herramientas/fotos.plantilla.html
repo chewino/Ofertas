@@ -1,0 +1,83 @@
+<template>
+  <style>
+    /* Fondo transparente: debajo están los clips de video del dron (index.html) */
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    #cam { position: absolute; inset: 0; overflow: hidden; }
+    #cam img { position: absolute; top: 0; left: 0; width: 1920px; height: 1080px; visibility: hidden; opacity: 0; }
+    #root .capa { position: absolute; inset: 0; pointer-events: none; }
+    #vigneta { background: radial-gradient(90% 90% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,.55) 100%); }
+    #flash { background: #fff6dc; opacity: 0; }
+    #negro { background: #000; opacity: 0; }
+  </style>
+
+  <!-- Generado con una lista de tomas; ver README.md -->
+  <div id="root" data-composition-id="fotos" data-width="1920" data-height="1080">
+    <div id="cam">
+%IMGS%
+    </div>
+    <div id="vigneta" class="capa"></div>
+    <div id="flash" class="capa"></div>
+    <div id="negro" class="capa"></div>
+  </div>
+
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const W = 1920, H = 1080, B = 60 / 130, FIN = 42;
+
+      // Encuadre: escala s (1 = la foto llena el cuadro) centrada en (fx, fy), sin dejar bordes
+      function pose(s, fx, fy) {
+        return {
+          x: Math.min(0, Math.max(W - W * s, W / 2 - fx * W * s)),
+          y: Math.min(0, Math.max(H - H * s, H / 2 - fy * H * s)),
+          scale: s,
+        };
+      }
+
+      // [id, tiempo musical de entrada, duración en tiempos (null = hasta el final), foco x, foco y, zoom inicial, zoom final, deriva x]
+      const tomas = [
+%ROWS%
+      ];
+
+      tomas.forEach(([id, b0, nb, fx, fy, z0, z1, dx]) => {
+        const t0 = b0 * B, t1 = nb === null ? FIN : (b0 + nb) * B;
+        tl.set(id, { transformOrigin: "0 0", ...pose(z0 + 0.15, fx, fy) }, 0);
+        tl.set(id, { autoAlpha: 1 }, t0);
+        // golpe de zoom al entrar y luego deriva lenta
+        tl.to(id, { ...pose(z0, fx, fy), duration: 0.2, ease: "expo.out" }, t0);
+        tl.to(id, { ...pose(z1, fx + dx, fy), duration: t1 - t0 - 0.2, ease: nb === null ? "sine.out" : "none" }, t0 + 0.2);
+        if (nb !== null) tl.set(id, { autoAlpha: 0 }, t1);
+      });
+
+      tl.set("#cam", { filter: "contrast(1.14) saturate(1.35) brightness(1.04)", transformOrigin: "50% 50%" }, 0);
+
+      // Pulso en cada tiempo mientras toca la banda (partes A y B)
+      for (let b = 8; b < 80; b++) {
+        if (b >= 40 && b < 48) continue; // break: el clip de la iglesia
+        tl.fromTo("#cam", { scale: b % 2 ? 1.012 : 1.03 }, { scale: 1, duration: B * 0.8, ease: "power2.out", immediateRender: false }, b * B);
+      }
+
+      // Destellos: fuertes al entrar cada parte y en el golpe final, suaves cada 4 tiempos
+      [8, 48, 82].forEach((b) => tl.fromTo("#flash", { opacity: 0.85 }, { opacity: 0, duration: 0.5, ease: "power2.out", immediateRender: false }, b * B));
+      for (let b = 12; b < 80; b += 4) {
+        if ((b >= 40 && b < 48) || b === 48) continue;
+        tl.fromTo("#flash", { opacity: 0.22 }, { opacity: 0, duration: 0.22, ease: "power2.out", immediateRender: false }, b * B);
+      }
+
+      // Sacudida en los golpes grandes
+      [8, 48, 82].forEach((b) => {
+        const t = b * B;
+        for (let k = 0; k < 8; k++) {
+          const a = 22 * (1 - k / 8);
+          tl.to("#cam", { x: (k % 2 ? -1 : 1) * a, y: ((k % 3) - 1) * a * 0.7, duration: 0.04, ease: "none" }, t + k * 0.04);
+        }
+        tl.to("#cam", { x: 0, y: 0, duration: 0.05 }, t + 0.32);
+      });
+
+      tl.to("#negro", { opacity: 1, duration: 0.6, ease: "power1.in" }, FIN - 0.6);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["fotos"] = tl;
+    })();
+  </script>
+</template>
